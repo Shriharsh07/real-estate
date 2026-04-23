@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Auth } from '../../core/services/auth';
 import { Router } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
@@ -19,12 +20,13 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './login.html',
-  styleUrls: ['./login.scss'],
+  styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
 
   username = '';
   password = '';
@@ -33,6 +35,13 @@ export class Login {
     private auth: Auth,
     private router: Router
   ) {}
+
+  ngOnInit() {
+    // Check if already logged in
+    if (localStorage.getItem('token')) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   login() {
     this.auth.login(this.username, this.password).subscribe({

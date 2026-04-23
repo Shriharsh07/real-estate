@@ -1,17 +1,103 @@
 .login-container {
-  height: 100vh;
+  position: relative;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
-  mat-card {
-    width: 350px;
-    padding: 20px;
+  .login-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="20" fill="rgba(255,255,255,.1)"/><circle cx="80" cy="80" r="30" fill="rgba(255,255,255,.05)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    border: none !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    }
+  }
+
+  mat-card-header {
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .login-header {
     text-align: center;
+    padding: 32px 24px 24px;
+    background: linear-gradient(135deg, rgba(0, 172, 193, 0.05) 0%, rgba(156, 39, 176, 0.05) 100%);
+
+    .logo-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    h2 {
+      margin: 0 0 8px 0;
+      color: var(--text-primary);
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+    }
+  }
+
+  mat-card-content {
+    padding: 32px 24px 24px !important;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   mat-form-field {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-}
+    width: 100% !important;
+
+    &.full-width {
+      width: 100% !important;
+    }
+
+    &.mt-16 {
+      margin-top: 16px;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+
+    mat-icon {
+      color: var(--text-secondary);
+      margin-right: 8px;
+    }
+  }\n\n  .login-button {\n    width: 100%;\n    height: 48px;\n    font-size: 16px;\n    font-weight: 600;\n    letter-spacing: 0.5px;\n    border-radius: 8px !important;\n    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;\n    box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3) !important;\n    transition: all 0.3s ease !important;\n\n    &:hover {\n      transform: translateY(-2px);\n      box-shadow: 0 6px 20px rgba(0, 172, 193, 0.4) !important;\n    }\n\n    &:active {\n      transform: translateY(0);\n    }\n  }\n\n  .login-footer {\n    text-align: center;\n    padding-top: 16px;\n    border-top: 1px solid rgba(0, 0, 0, 0.05);\n    margin-top: 16px;\n\n    .forgot-password {\n      margin: 0;\n      font-size: 12px;\n      color: var(--text-secondary);\n      cursor: pointer;\n      transition: color 0.3s ease;\n\n      &:hover {\n        color: var(--primary-color);\n      }\n    }\n  }\n}\n\n.mt-16 {\n  margin-top: 16px;\n}\n\n.mt-24 {\n  margin-top: 24px;\n}

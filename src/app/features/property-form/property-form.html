@@ -1,1 +1,147 @@
-<p>property-form works!</p>
+<div class="property-form-container">
+  <div class="page-header">
+    <h2>🏠 Add Property</h2>
+    <p class="subtitle">Fill in the details below to list a new property</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h3>📋 Basic Information</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Property Title</mat-label>
+            <mat-icon matPrefix>🏷️</mat-icon>
+            <input matInput formControlName="title" placeholder="e.g., Beautiful Modern House" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width mt-16">
+            <mat-label>Location</mat-label>
+            <mat-icon matPrefix>📍</mat-icon>
+            <input matInput formControlName="location" placeholder="e.g., 123 Main St, City, State" required />
+          </mat-form-field>
+        </div>
+
+        <!-- Property Details Section -->
+        <div class="form-section">
+          <h3>🔍 Property Details</h3>
+
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Property Type</mat-label>
+              <mat-select formControlName="type" required>
+                <mat-option value="house">🏠 House</mat-option>
+                <mat-option value="apartment">🏢 Apartment</mat-option>
+                <mat-option value="condo">🏘️ Condo</mat-option>
+                <mat-option value="land">🌳 Land</mat-option>
+                <mat-option value="commercial">🏬 Commercial</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option value="available">✅ Available</mat-option>
+                <mat-option value="sold">🎉 Sold</mat-option>
+                <mat-option value="rented">🔑 Rented</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Pricing Section -->
+        <div class="form-section">
+          <h3>💰 Pricing</h3>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Price</mat-label>
+            <mat-icon matPrefix>💵</mat-icon>
+            <input matInput type="number" formControlName="price" placeholder="0.00" required />
+          </mat-form-field>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="form-section">
+          <h3>📸 Property Images</h3>
+          
+          <div class="upload-area">
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*"
+              (change)="onFileSelect($event)" 
+              #fileInput
+              hidden
+            />
+            <button mat-stroked-button type="button" (click)="fileInput.click()" class="upload-button">
+              📤 Click to Upload Images
+            </button>
+            <p class="upload-hint">or drag and drop your images here</p>
+          </div>
+
+          <!-- Upload Progress -->
+          <div *ngIf="isUploading" class="upload-progress">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Uploading images...</p>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions mt-24">
+          <button mat-raised-button color="primary" type="submit" class="submit-button">
+            💾 Save Property
+          </button>
+          <button mat-stroked-button type="button" routerLink="/property-list" class="cancel-button">
+            ❌ Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+                    <div class="form-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Property Type</mat-label>
+                            <mat-select formControlName="type" required>
+                                <mat-option value="house">🏠 House</mat-option>
+                                <mat-option value="apartment">🏢 Apartment</mat-option>
+                                <mat-option value="condo">🏘️ Condo</mat-option>
+                                <mat-option value="land">🌳 Land</mat-option>
+                                <mat-option value="commercial">� Commercial</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        value="commercial">🏬 Commercial</mat-option>\n </mat-select>\n </mat-form-field>\n\n
+                        <mat-form-field appearance="outline">\n <mat-label>Status</mat-label>\n <mat-select
+                                formControlName="status\" required>\n <mat-option value="available">✅
+                                    Available</mat-option>\n <mat-option value="sold">🎉
+                                    Sold</mat-option>\n <mat-option value="rented">🔑 Rented</mat-option>\n
+                            </mat-select>\n
+                        </mat-form-field>\n
+                    </div>\n
+                </div>\n\n <!-- Pricing Section -->\n <div class="form-section">\n <h3>💰 Pricing</h3>\n \n
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Price</mat-label>
+                        <mat-icon matPrefix>💵</mat-icon>
+                        <input matInput type="number" formControlName="price" placeholder="0.00" required />
+                    </mat-form-field>
+                </div>\n\n <!-- Image Upload Section -->\n <div class="form-section">\n
+                    <h3>📸 Property Images</h3>\n \n <div class="upload-area">\n <input \n type="file" \n multiple \n
+                            accept="image/*" \n (change)="onFileSelect($event)" \n #fileInput\n hidden\n />\n <button
+                            mat-stroked-button type="button" (click)="fileInput.click()" class="upload-button">\n 📤
+                            Click to
+                            Upload Images\n </button>\n <p class="upload-hint">or drag and drop your images here</p>\n
+                    </div>\n\n
+                    <!-- Upload Progress -->\n <div *ngIf="isUploading" class="upload-progress">\n <mat-spinner
+                            diameter="40"></mat-spinner>\n <p>Uploading images...</p>\n </div>\n
+                </div>\n\n <!-- Form Actions -->\n
+                <div class="form-actions mt-24">\n <button mat-raised-button color="primary" type="submit\"
+                        class="submit-button">\n 💾 Save Property\n </button>\n <button mat-stroked-button
+                        type="button\" routerLink="/property-list" class="cancel-button">\n ❌ Cancel\n </button>\n
+                </div>\n
+            </form>\n
+        </mat-card-content>\n </mat-card>\n
+</div>

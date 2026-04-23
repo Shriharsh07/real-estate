@@ -1,1 +1,36 @@
-<router-outlet></router-outlet>
+<div class="app-container">
+  <!-- Header/Navbar -->
+  <header class="app-header">
+    <div class="navbar">
+      <div class="navbar-brand">
+        <span class="brand-icon">🏢</span>
+        <h1 class="brand-title">Real Estate Pro</h1>
+      </div>
+      
+      <nav class="navbar-nav">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon">📊</span>
+          Dashboard
+        </a>
+        <a routerLink="/property-list" routerLinkActive="active" class="nav-link">
+          <span class="nav-icon">🏠</span>
+          Properties
+        </a>
+        <a href="#" class="nav-link logout">
+          <span class="nav-icon">🚪</span>
+          Logout
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>&copy; 2024 Real Estate Pro. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+</div>

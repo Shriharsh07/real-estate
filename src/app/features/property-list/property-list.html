@@ -1,1 +1,75 @@
-<p>property-list works!</p>
+<div class="property-list-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h2>🏠 Properties</h2>
+      <p class="subtitle">Manage all your properties</p>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/property-form">
+      ➕ Add Property
+    </button>
+  </div>
+
+  <!-- Properties Grid -->
+  <div class="properties-grid" *ngIf="properties && properties.length > 0">
+    <mat-card class="property-card" *ngFor="let p of properties">
+      <mat-card-content class="property-content">
+        <!-- Image Section -->
+        <div class="property-image">
+          <img *ngIf="p.images?.length" [src]="p.images[0]" alt="{{ p.title }}" />
+          <div *ngIf="!p.images?.length" class="no-image">
+            <span>📸</span>
+          </div>
+          <div class="property-badge" [ngClass]="'badge-' + p.status">
+            {{ p.status | uppercase }}
+          </div>
+        </div>
+
+        <!-- Property Info -->
+        <div class="property-info">
+          <h3 class="property-title">{{ p.title }}</h3>
+          
+          <div class="property-details">
+            <div class="detail-item">
+              <span class="label">📍 Location:</span>
+              <span class="value">{{ p.location }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">🏢 Type:</span>
+              <span class="value">{{ p.type }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">💰 Price:</span>
+              <span class="value price">${{ p.price | number }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">📊 Status:</span>
+              <span class="value" [ngClass]="'status-' + p.status\">{{ p.status }}</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="property-actions">
+            <button mat-stroked-button routerLink="/property-form/{{ p._id }}">
+              ✏️ Edit
+            </button>
+            <button mat-stroked-button color="warn" (click)="delete(p._id)">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <mat-card class="empty-state" *ngIf="!properties || properties.length === 0">
+    <mat-card-content class="text-center">
+      <div class="empty-icon">📦</div>
+      <h3>No Properties Yet</h3>
+      <p>Start adding properties to see them here.</p>
+      <button mat-raised-button color="primary" routerLink="/property-form">
+        ➕ Add Your First Property
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>
