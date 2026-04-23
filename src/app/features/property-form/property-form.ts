@@ -35,6 +35,7 @@ export class PropertyFormComponent implements OnInit {
   selectedFiles: File[] = [];
   uploadedImageUrls: string[] = [];
   isUploading = false;
+  private filePreviewUrls: Map<File, string> = new Map();
 
   constructor(
     private fb: FormBuilder,
@@ -63,6 +64,21 @@ export class PropertyFormComponent implements OnInit {
   // 📸 Handle file selection
   onFileSelect(event: any) {
     this.selectedFiles = Array.from(event.target.files);
+    // Generate preview URLs for selected files
+    this.selectedFiles.forEach(file => {
+      if (!this.filePreviewUrls.has(file)) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.filePreviewUrls.set(file, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Get preview URL for selected file
+  getFilePreview(file: File): string {
+    return this.filePreviewUrls.get(file) || '';
   }
 
   // ☁️ Upload images to backend
@@ -79,6 +95,9 @@ export class PropertyFormComponent implements OnInit {
       this.http.post('/api/upload', formData).subscribe({
         next: (res: any) => {
           this.isUploading = false;
+          // Clear selected files and preview after successful upload
+          this.selectedFiles = [];
+          this.filePreviewUrls.clear();
           resolve(res);
         },
         error: (err) => {

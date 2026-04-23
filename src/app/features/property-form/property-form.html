@@ -86,6 +86,27 @@
             <mat-spinner diameter="40"></mat-spinner>
             <p>Uploading images...</p>
           </div>
+
+          <!-- Selected Files Preview -->
+          <div *ngIf="selectedFiles.length > 0 && !isUploading" class="preview-section">
+            <h4>Selected Images ({{ selectedFiles.length }})</h4>
+            <div class="image-preview-grid">
+              <div *ngFor="let file of selectedFiles" class="preview-item">
+                <img [src]="getFilePreview(file)" alt="Preview" class="preview-image" />
+                <p class="file-name">{{ file.name }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Uploaded Images Display -->
+          <div *ngIf="uploadedImageUrls.length > 0" class="uploaded-section">
+            <h4>✅ Uploaded Images</h4>
+            <div class="image-preview-grid">
+              <div *ngFor="let url of uploadedImageUrls" class="preview-item">
+                <img [src]="url" alt="Uploaded" class="preview-image" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Form Actions -->

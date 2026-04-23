@@ -13,16 +13,16 @@ const {
 // CREATE
 router.post("/", auth, createProperty);
 
-// GET ALL
-router.get("/", auth, getProperties);
+// GET ALL (public endpoint)
+router.get("/", getProperties);
 
-// GET ONE
+// GET ONE (protected)
 router.get("/:id", auth, getPropertyById);
 
-// UPDATE
+// UPDATE (protected)
 router.put("/:id", auth, updateProperty);
 
-// DELETE
+// DELETE (protected)
 router.delete("/:id", auth, deleteProperty);
 
 module.exports = router;

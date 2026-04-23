@@ -9,8 +9,25 @@
     </button>
   </div>
 
-  <!-- Properties Grid -->
-  <div class="properties-grid" *ngIf="properties && properties.length > 0">
+  <!-- Loading State -->
+  <mat-card class="loading-state" *ngIf="loading">
+    <mat-card-content class="text-center">
+      <p>Loading properties...</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Error State -->
+  <mat-card class="error-state" *ngIf="error && !loading">
+    <mat-card-content class="text-center">
+      <div class="error-icon">⚠️</div>
+      <h3>Error Loading Properties</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button (click)="loadProperties()">
+        🔄 Retry
+      </button>
+    </mat-card-content>
+  </mat-card>
+  <div class="properties-grid" *ngIf="properties && properties.length > 0 && !loading && !error">
     <mat-card class="property-card" *ngFor="let p of properties">
       <mat-card-content class="property-content">
         <!-- Image Section -->
@@ -62,7 +79,7 @@
   </div>
 
   <!-- Empty State -->
-  <mat-card class="empty-state" *ngIf="!properties || properties.length === 0">
+  <mat-card class="empty-state" *ngIf="!properties || properties.length === 0 && !loading && !error">
     <mat-card-content class="text-center">
       <div class="empty-icon">📦</div>
       <h3>No Properties Yet</h3>

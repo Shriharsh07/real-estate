@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from "@angular/core";
 import { PropertyService } from "../../core/services/property";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: "app-property-list",
@@ -12,21 +13,47 @@ import { MatIconModule } from "@angular/material/icon";
   imports: [ CommonModule, MatCardModule, MatButtonModule, RouterLink, MatIconModule],
   templateUrl: "./property-list.html",
   styleUrl: "./property-list.scss",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PropertyList implements OnInit {
   properties: any[] = [];
+  loading = true;
+  error: string | null = null;
 
-  constructor(private propertyService: PropertyService) {}
+  constructor(
+    private propertyService: PropertyService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadProperties();
   }
 
   loadProperties() {
-    this.propertyService.getProperties().subscribe((res: any) => {
-      this.properties = res;
-    });
+    this.loading = true;
+    this.error = null;
+    this.cdr.markForCheck();
+    
+    this.propertyService.getProperties()
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          console.log('Properties loaded:', res);
+          this.properties = Array.isArray(res) ? res : [res];
+          this.cdr.markForCheck();
+        },
+        error: (err: any) => {
+          console.error('Error loading properties:', err);
+          this.error = err?.error?.message || 'Failed to load properties';
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   delete(id: string) {

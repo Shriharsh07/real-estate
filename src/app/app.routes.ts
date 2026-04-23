@@ -9,6 +9,6 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'dashboard', component: Dashboard },
-  { path: 'properties', component: PropertyList },
+  { path: 'property-list', component: PropertyList },
   { path: 'property-form', component: PropertyFormComponent }
 ];
