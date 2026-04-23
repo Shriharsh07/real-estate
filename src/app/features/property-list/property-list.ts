@@ -2,14 +2,14 @@ import { Component, OnInit } from "@angular/core";
 import { PropertyService } from "../../core/services/property";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
-import { Router} from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-property-list",
   standalone: true,
-  imports: [ CommonModule, MatCardModule, MatButtonModule, Router, MatIconModule],
+  imports: [ CommonModule, MatCardModule, MatButtonModule, RouterLink, MatIconModule],
   templateUrl: "./property-list.html",
   styleUrl: "./property-list.scss",
 })
