@@ -6,6 +6,7 @@
   align-items: center;
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
   .login-background {
     position: absolute;
@@ -100,4 +101,55 @@
       color: var(--text-secondary);
       margin-right: 8px;
     }
-  }\n\n  .login-button {\n    width: 100%;\n    height: 48px;\n    font-size: 16px;\n    font-weight: 600;\n    letter-spacing: 0.5px;\n    border-radius: 8px !important;\n    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;\n    box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3) !important;\n    transition: all 0.3s ease !important;\n\n    &:hover {\n      transform: translateY(-2px);\n      box-shadow: 0 6px 20px rgba(0, 172, 193, 0.4) !important;\n    }\n\n    &:active {\n      transform: translateY(0);\n    }\n  }\n\n  .login-footer {\n    text-align: center;\n    padding-top: 16px;\n    border-top: 1px solid rgba(0, 0, 0, 0.05);\n    margin-top: 16px;\n\n    .forgot-password {\n      margin: 0;\n      font-size: 12px;\n      color: var(--text-secondary);\n      cursor: pointer;\n      transition: color 0.3s ease;\n\n      &:hover {\n        color: var(--primary-color);\n      }\n    }\n  }\n}\n\n.mt-16 {\n  margin-top: 16px;\n}\n\n.mt-24 {\n  margin-top: 24px;\n}
+  }
+
+  /* Ensure the parent class (likely .login-container or similar) is opened before this block */
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3) !important;
+  transition: all 0.3s ease !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 172, 193, 0.4) !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.login-footer {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  margin-top: 16px;
+
+  .forgot-password {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
+/* Global Utility Classes */
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-24 {
+  margin-top: 24px;
+}

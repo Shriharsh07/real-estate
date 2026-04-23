@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatLabel } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { PropertyService } from '../../core/services/property';
@@ -8,7 +7,7 @@ import { PropertyService } from '../../core/services/property';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatLabel, MatCardModule, MatButtonModule, RouterLink],
+  imports: [MatCardModule, MatButtonModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
