@@ -1,19 +1,22 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class PropertyService {
-
   constructor(private http: HttpClient) {}
 
+  getStats() {
+    return this.http.get("/api/properties/stats");
+  }
+
   getProperties(params?: any) {
-    return this.http.get('/api/properties', { params });
+    return this.http.get("/api/properties", { params });
   }
 
   createProperty(data: any) {
-    return this.http.post('/api/properties', data);
+    return this.http.post("/api/properties", data);
   }
 
   updateProperty(id: string, data: any) {

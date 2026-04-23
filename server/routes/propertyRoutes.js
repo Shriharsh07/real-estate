@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const { getStats } = require("../controllers/propertyController");
 
 const {
   createProperty,
@@ -9,6 +10,10 @@ const {
   updateProperty,
   deleteProperty
 } = require("../controllers/propertyController");
+
+
+// GET STATS
+router.get("/stats", auth, getStats);
 
 // CREATE
 router.post("/", auth, createProperty);

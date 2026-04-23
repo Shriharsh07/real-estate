@@ -90,3 +90,23 @@ exports.deleteProperty = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getStats = async (req, res) => {
+  try {
+    const total = await Property.countDocuments();
+
+    const available = await Property.countDocuments({ status: "available" });
+    const sold = await Property.countDocuments({ status: "sold" });
+    const rented = await Property.countDocuments({ status: "rented" });
+
+    res.json({
+      total,
+      available,
+      sold,
+      rented
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

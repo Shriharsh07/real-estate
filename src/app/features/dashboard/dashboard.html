@@ -5,48 +5,30 @@
   </div>
 
   <!-- Stats Cards -->
-  <div class="stats-grid">
-    <mat-card class="stat-card total">
-      <mat-card-content>
-        <div class="stat-icon">📦</div>
-        <div class="stat-info">
-          <p class="stat-label">Total Properties</p>
-          <h3 class="stat-value">{{ totalProperties }}</h3>
-        </div>
-      </mat-card-content>
+
+  <div class="cards">
+
+    <mat-card class="card total">
+      <h3>Total</h3>
+      <p>{{ stats.total}}</p>
     </mat-card>
 
-    <mat-card class="stat-card available">
-      <mat-card-content>
-        <div class="stat-icon">✅</div>
-        <div class="stat-info">
-          <p class="stat-label">Available</p>
-          <h3 class="stat-value">{{ availableProperties }}</h3>
-        </div>
-      </mat-card-content>
+    <mat-card class="card available">
+      <h3>Available</h3>
+      <p>{{ stats.available }}</p>
     </mat-card>
 
-    <mat-card class="stat-card sold">
-      <mat-card-content>
-        <div class="stat-icon">🎉</div>
-        <div class="stat-info">
-          <p class="stat-label">Sold</p>
-          <h3 class="stat-value">{{ soldProperties }}</h3>
-        </div>
-      </mat-card-content>
+    <mat-card class="card sold">
+      <h3>Sold</h3>
+      <p>{{ stats.sold }}</p>
     </mat-card>
 
-    <mat-card class="stat-card rented">
-      <mat-card-content>
-        <div class="stat-icon">🔑</div>
-        <div class="stat-info">
-          <p class="stat-label">Rented</p>
-          <h3 class="stat-value">{{ rentedProperties }}</h3>
-        </div>
-      </mat-card-content>
+    <mat-card class="card rented">
+      <h3>Rented</h3>
+      <p>{{ stats.rented}}</p>
     </mat-card>
+
   </div>
-
   <!-- Quick Actions -->
   <div class="actions-section mt-24">
     <h3>Quick Actions</h3>

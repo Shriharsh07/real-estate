@@ -154,3 +154,39 @@
 .mt-24 {
   margin-top: 24px;
 }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  padding: 20px;
+  text-align: center;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 24px;
+    font-weight: bold;
+  }
+}
+
+.total {
+  background: #e3f2fd;
+}
+
+.available {
+  background: #e8f5e9;
+}
+
+.sold {
+  background: #ffebee;
+}
+
+.rented {
+  background: #ede7f6;
+}
