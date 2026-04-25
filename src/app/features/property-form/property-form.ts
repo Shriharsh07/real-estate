@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { PropertyService } from '../../core/services/property';
@@ -46,34 +47,50 @@ export class PropertyFormComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group({
-      title: [''],
+      propertyName: [''],
       description: [''],
       location: [''],
+      pincode: ['', [Validators.minLength(6), Validators.maxLength(6), Validators.pattern(/^[0-9]{6}$/)]],
       type: ['house'],
       status: ['available'],
       price: [''],
       images: [[]],
-      owner: this.fb.group({
-        name: [''],
-        phone: [''],
-        email: ['']
-      })
+      length: [null],
+      width: [null],
+      bedrooms: [null],
+      bathrooms: [null],
+      totalSqft: [null],
+    });
+
+    // Auto-calculate totalSqft from length × width
+    combineLatest([
+      this.form.get('length')!.valueChanges,
+      this.form.get('width')!.valueChanges,
+    ]).subscribe((values: number[]) => {
+      const [length, width] = values;
+      const sqft = length && width ? length * width : null;
+      this.form.get('totalSqft')!.setValue(sqft, { emitEvent: false });
     });
   }
 
   // 📸 Handle file selection
   onFileSelect(event: any) {
-    this.selectedFiles = Array.from(event.target.files);
-    // Generate preview URLs for selected files
-    this.selectedFiles.forEach(file => {
-      if (!this.filePreviewUrls.has(file)) {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.filePreviewUrls.set(file, e.target.result);
-        };
-        reader.readAsDataURL(file);
+    const newFiles: File[] = Array.from(event.target.files);
+    // Accumulate — skip duplicates by name+size
+    newFiles.forEach(file => {
+      const isDuplicate = this.selectedFiles.some(
+        f => f.name === file.name && f.size === file.size
+      );
+      if (!isDuplicate) {
+        this.selectedFiles.push(file);
       }
     });
+    // Reset input so the same file(s) can trigger change again
+    event.target.value = '';
+  }
+
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
   }
 
   // Get preview URL for selected file

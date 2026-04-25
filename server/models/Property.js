@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 
 const propertySchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  propertyName: { type: String, required: true },
   description: String,
   location: String,
+  pincode: String,
 
   type: {
     type: String,
-    enum: ["sale", "rent", "house"],
+    enum: ["sale", "rent", "house", "apartment", "duplex", "land", "commercial"],
     required: true
   },
 
@@ -21,11 +22,12 @@ const propertySchema = new mongoose.Schema({
 
   images: [String], // 🔥 for Cloudinary later
 
-  owner: {
-    name: String,
-    phone: String,
-    email: String
-  }
+  //house-specific fields
+  length: { type: Number },
+  width  : { type: Number },
+  bedrooms: { type: Number },
+  bathrooms: { type: Number },
+  totalSqft: { type: Number }
 
 }, { timestamps: true });
 

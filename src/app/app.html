@@ -1,5 +1,6 @@
 <div class="app-container">
   <!-- Header/Navbar -->
+  @if (!isLoginPage) {
   <header class="app-header">
     <div class="navbar">
       <div class="navbar-brand">
@@ -23,14 +24,17 @@
       </nav>
     </div>
   </header>
+  }
 
   <!-- Main Content -->
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
 
+  @if (!isLoginPage) {
   <!-- Footer -->
   <footer class="app-footer">
     <p>&copy; 2024 Real Estate Pro. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
   </footer>
+  }
 </div>

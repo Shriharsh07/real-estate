@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +11,18 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/rou
 })
 export class App {
   protected readonly title = signal('real-estate-app');
+  isLoginPage = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isLoginPage = event.urlAfterRedirects === '/login';
+      });
+  }
 
   logout() {
-    // Clear the authentication token
     localStorage.removeItem('token');
-    // Navigate to login page
     this.router.navigate(['/login']);
   }
 }

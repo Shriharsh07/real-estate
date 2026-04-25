@@ -56,12 +56,9 @@
             </div>
             <div class="detail-item">
               <span class="label">💰 Price:</span>
-              <span class="value price">${{ p.price | number }}</span>
+              <span class="value price">₹{{ p.price | number }}</span>
             </div>
-            <div class="detail-item">
-              <span class="label">📊 Status:</span>
-              <span class="value" [ngClass]="'status-' + p.status">{{ p.status }}</span>
-            </div>
+
           </div>
 
           <!-- Actions -->

@@ -5,7 +5,7 @@ const validStatusByType = {
   rent: ["available", "rented"],
   house: ["available", "sold", "rented"],
   apartment : ["available", "sold", "rented"],
-  condo : ["available", "sold", "rented"],
+  duplex : ["available", "sold", "rented"],
   land : ["available", "sold", "rented"],
   commercial : ["available", "sold", "rented"]
 };

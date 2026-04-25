@@ -12,16 +12,31 @@
           <h3>📋 Basic Information</h3>
           
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Property Title</mat-label>
+            <mat-label>Property Name</mat-label>
             <mat-icon matPrefix>🏷️</mat-icon>
-            <input matInput formControlName="title" placeholder="e.g., Beautiful Modern House" required />
+            <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" required />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="full-width mt-16">
-            <mat-label>Location</mat-label>
-            <mat-icon matPrefix>📍</mat-icon>
-            <input matInput formControlName="location" placeholder="e.g., 123 Main St, City, State" required />
+            <mat-label>Description</mat-label>
+            <mat-icon matPrefix>📝</mat-icon>
+            <textarea matInput formControlName="description" rows="3" placeholder="Brief description of the property"></textarea>
           </mat-form-field>
+
+          <div class="form-grid mt-16">
+            <mat-form-field appearance="outline">
+              <mat-label>Location</mat-label>
+              <mat-icon matPrefix>📍</mat-icon>
+              <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Pincode</mat-label>
+              <mat-icon matPrefix>🔢</mat-icon>
+              <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6" (keypress)="$event.charCode >= 48 && $event.charCode <= 57" required />
+              <mat-error *ngIf="form.get('pincode')?.hasError('pattern')">Pincode must be exactly 6 digits</mat-error>
+            </mat-form-field>
+          </div>
         </div>
 
         <!-- Property Details Section -->
@@ -34,7 +49,7 @@
               <mat-select formControlName="type" required>
                 <mat-option value="house">🏠 House</mat-option>
                 <mat-option value="apartment">🏢 Apartment</mat-option>
-                <mat-option value="condo">🏘️ Condo</mat-option>
+                <mat-option value="duplex">🏘️ Duplex</mat-option>
                 <mat-option value="land">🌳 Land</mat-option>
                 <mat-option value="commercial">🏬 Commercial</mat-option>
               </mat-select>
@@ -51,13 +66,50 @@
           </div>
         </div>
 
+        <!-- House-Specific Details Section -->
+        <div class="form-section">
+          <h3>🏗️ Property Dimensions</h3>
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Length (ft)</mat-label>
+              <mat-icon matPrefix>📐</mat-icon>
+              <input matInput type="number" formControlName="length" placeholder="e.g., 40" required/>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Width (ft)</mat-label>
+              <mat-icon matPrefix>📐</mat-icon>
+              <input matInput type="number" formControlName="width" placeholder="e.g., 30" required/>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Total Sq. Ft</mat-label>
+              <mat-icon matPrefix>📏</mat-icon>
+              <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated from Length × Width" readonly />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Bedrooms</mat-label>
+              <mat-icon matPrefix>🛏️</mat-icon>
+              <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" required/>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Bathrooms</mat-label>
+              <mat-icon matPrefix>🚿</mat-icon>
+              <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" required/>
+            </mat-form-field>
+          </div>
+        </div>
+
         <!-- Pricing Section -->
         <div class="form-section">
           <h3>💰 Pricing</h3>
           
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Price</mat-label>
-            <mat-icon matPrefix>💵</mat-icon>
+            <mat-icon matPrefix>�</mat-icon>
+            <span matTextPrefix>₹&nbsp;</span>
             <input matInput type="number" formControlName="price" placeholder="0.00" required />
           </mat-form-field>
         </div>
@@ -90,10 +142,11 @@
           <!-- Selected Files Preview -->
           <div *ngIf="selectedFiles.length > 0 && !isUploading" class="preview-section">
             <h4>Selected Images ({{ selectedFiles.length }})</h4>
-            <div class="image-preview-grid">
-              <div *ngFor="let file of selectedFiles" class="preview-item">
-                <img [src]="getFilePreview(file)" alt="Preview" class="preview-image" />
-                <p class="file-name">{{ file.name }}</p>
+            <div class="file-list">
+              <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
+                <span class="file-icon">📄</span>
+                <span class="file-name">{{ file.name }}</span>
+                <button mat-icon-button type="button" class="remove-file" (click)="removeFile(i)" title="Remove">✕</button>
               </div>
             </div>
           </div>
