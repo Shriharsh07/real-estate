@@ -1,35 +1,57 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <div class="login-header">
-        <div class="logo-icon">🏢</div>
-        <h2>Real Estate Admin</h2>
-        <p class="subtitle">Manage your properties with ease</p>
+<div class="login-page">
+  <div class="login-wrapper">
+
+    <div class="brand-header">
+      <div class="brand-icon-wrap">
+        <mat-icon class="brand-icon">apartment</mat-icon>
       </div>
-    </mat-card-header>
+      <span class="brand-name">EstateHub</span>
+    </div>
 
-    <mat-card-content>
-      <form (ngSubmit)="login()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
-          <mat-icon matPrefix>👤</mat-icon>
-          <input matInput [(ngModel)]="username" name="username" required />
-        </mat-form-field>
+    <mat-card class="login-card">
+      <mat-card-content>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <mat-icon matPrefix>🔐</mat-icon>
-          <input matInput type="password" [(ngModel)]="password" name="password" required />
-        </mat-form-field>
+        <div class="card-heading">
+          <h1 class="card-title">Welcome back</h1>
+          <p class="card-subtitle">Sign in to your admin dashboard</p>
+        </div>
 
-        <button mat-raised-button type="submit" class="login-button">
-          🚀 Sign In
-        </button>
-      </form>
+        <form (ngSubmit)="login()" class="login-form">
 
-      <div class="login-footer">
-        <p class="forgot-password">Need help? Contact support</p>
-      </div>
-    </mat-card-content>
-  </mat-card>
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Username</mat-label>
+            <mat-icon matPrefix class="field-icon">person</mat-icon>
+            <input matInput [(ngModel)]="username" name="username" required autocomplete="username" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix class="field-icon">lock</mat-icon>
+            <input matInput [type]="showPassword ? 'text' : 'password'"
+                   [(ngModel)]="password" name="password" required
+                   autocomplete="current-password" />
+            <button mat-icon-button matSuffix type="button"
+                    (click)="showPassword = !showPassword"
+                    class="visibility-btn">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <button mat-flat-button type="submit" class="sign-in-btn"
+                  [disabled]="!username || !password">
+            <mat-icon>login</mat-icon>
+            Sign In
+          </button>
+
+        </form>
+
+        <div class="card-footer">
+          <mat-icon class="footer-icon">support_agent</mat-icon>
+          <span>Need access? Contact your administrator</span>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+  </div>
 </div>

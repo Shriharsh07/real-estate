@@ -1,89 +1,88 @@
-<div class="property-list-container">
+<div class="property-list-page">
+
+  <!-- Page header -->
   <div class="page-header">
-    <div class="header-content">
-      <h2>🏠 Properties</h2>
-      <p class="subtitle">Manage all your properties</p>
+    <div class="page-header-left">
+      <h1 class="page-title">Properties</h1>
+      <p class="page-subtitle">Browse and manage all your listings</p>
     </div>
-    <button mat-raised-button color="primary" routerLink="/property-form">
-      ➕ Add Property
+    <button class="add-btn" routerLink="/property-form">
+      <mat-icon>add</mat-icon>
+      <span>Add Property</span>
     </button>
   </div>
 
   <!-- Loading State -->
-  <mat-card class="loading-state" *ngIf="loading">
-    <mat-card-content class="text-center">
-      <p>Loading properties...</p>
-    </mat-card-content>
-  </mat-card>
+  <div class="state-card" *ngIf="loading">
+    <mat-icon class="state-icon spin">autorenew</mat-icon>
+    <p>Loading properties…</p>
+  </div>
 
   <!-- Error State -->
-  <mat-card class="error-state" *ngIf="error && !loading">
-    <mat-card-content class="text-center">
-      <div class="error-icon">⚠️</div>
-      <h3>Error Loading Properties</h3>
-      <p>{{ error }}</p>
-      <button mat-raised-button (click)="loadProperties()">
-        🔄 Retry
-      </button>
-    </mat-card-content>
-  </mat-card>
+  <div class="state-card error" *ngIf="error && !loading">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <h3>Failed to load properties</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadProperties()">
+      <mat-icon>refresh</mat-icon> Retry
+    </button>
+  </div>
+
+  <!-- Properties Grid -->
   <div class="properties-grid" *ngIf="properties && properties.length > 0 && !loading && !error">
     <mat-card class="property-card" *ngFor="let p of properties">
-      <mat-card-content class="property-content">
-        <!-- Image Section -->
-        <div class="property-image">
-          <img *ngIf="p.images?.length" [src]="p.images[0]" alt="{{ p.title }}" />
-          <div *ngIf="!p.images?.length" class="no-image">
-            <span>📸</span>
-          </div>
-          <div class="property-badge" [ngClass]="'badge-' + p.status">
-            {{ p.status | uppercase }}
-          </div>
+
+      <!-- Image -->
+      <div class="property-image">
+        <img *ngIf="p.images?.length" [src]="p.images[0]" [alt]="p.title" />
+        <div *ngIf="!p.images?.length" class="no-image">
+          <mat-icon>image_not_supported</mat-icon>
+        </div>
+        <span class="status-badge" [ngClass]="'badge-' + p.status">{{ p.status }}</span>
+      </div>
+
+      <!-- Info -->
+      <mat-card-content class="property-info">
+        <h3 class="property-title">{{ p.title }}</h3>
+
+        <div class="meta-row">
+          <mat-icon class="meta-icon">location_on</mat-icon>
+          <span>{{ p.location }}</span>
+        </div>
+        <div class="meta-row">
+          <mat-icon class="meta-icon">home_work</mat-icon>
+          <span>{{ p.type }}</span>
         </div>
 
-        <!-- Property Info -->
-        <div class="property-info">
-          <h3 class="property-title">{{ p.title }}</h3>
-          
-          <div class="property-details">
-            <div class="detail-item">
-              <span class="label">📍 Location:</span>
-              <span class="value">{{ p.location }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="label">🏢 Type:</span>
-              <span class="value">{{ p.type }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="label">💰 Price:</span>
-              <span class="value price">₹{{ p.price | number }}</span>
-            </div>
+        <div class="price-row">
+          <span class="price-label">Price</span>
+          <span class="price-value">₹{{ p.price | number }}</span>
+        </div>
 
-          </div>
-
-          <!-- Actions -->
-          <div class="property-actions">
-            <button mat-stroked-button routerLink="/property-form/{{ p._id }}">
-              ✏️ Edit
-            </button>
-            <button mat-stroked-button color="warn" (click)="delete(p._id)">
-              🗑️ Delete
-            </button>
-          </div>
+        <div class="property-actions">
+          <a class="action-btn edit" [routerLink]="['/property-form', p._id]">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </a>
+          <button class="action-btn delete" (click)="delete(p._id)">
+            <mat-icon>delete_outline</mat-icon>
+            <span>Delete</span>
+          </button>
         </div>
       </mat-card-content>
+
     </mat-card>
   </div>
 
   <!-- Empty State -->
-  <mat-card class="empty-state" *ngIf="!properties || properties.length === 0 && !loading && !error">
-    <mat-card-content class="text-center">
-      <div class="empty-icon">📦</div>
-      <h3>No Properties Yet</h3>
-      <p>Start adding properties to see them here.</p>
-      <button mat-raised-button color="primary" routerLink="/property-form">
-        ➕ Add Your First Property
-      </button>
-    </mat-card-content>
-  </mat-card>
+  <div class="state-card" *ngIf="!loading && !error && (!properties || properties.length === 0)">
+    <mat-icon class="state-icon">home_work</mat-icon>
+    <h3>No properties yet</h3>
+    <p>Start by adding your first listing.</p>
+    <button class="add-btn" routerLink="/property-form">
+      <mat-icon>add</mat-icon>
+      <span>Add Property</span>
+    </button>
+  </div>
+
 </div>

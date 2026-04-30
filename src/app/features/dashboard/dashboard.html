@@ -1,44 +1,107 @@
-<div class="dashboard-container">
+<div class="dashboard-page">
+
+  <!-- Page header -->
   <div class="page-header">
-    <h2>📊 Dashboard</h2>
-    <p class="subtitle">Welcome back! Here's your property overview.</p>
-  </div>
-
-  <!-- Stats Cards -->
-
-  <div class="cards">
-
-    <mat-card class="card total">
-      <h3>Total</h3>
-      <p>{{ stats.total}}</p>
-    </mat-card>
-
-    <mat-card class="card available">
-      <h3>Available</h3>
-      <p>{{ stats.available }}</p>
-    </mat-card>
-
-    <mat-card class="card sold">
-      <h3>Sold</h3>
-      <p>{{ stats.sold }}</p>
-    </mat-card>
-
-    <mat-card class="card rented">
-      <h3>Rented</h3>
-      <p>{{ stats.rented}}</p>
-    </mat-card>
-
-  </div>
-  <!-- Quick Actions -->
-  <div class="actions-section mt-24">
-    <h3>Quick Actions</h3>
-    <div class="actions-grid">
-      <button mat-raised-button color="primary" routerLink="/property-form">
-        <span>➕ Add Property</span>
-      </button>
-      <button mat-stroked-button routerLink="/property-list">
-        <span>📋 View All Properties</span>
-      </button>
+    <div class="page-header-left">
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Welcome back, here's your property overview</p>
     </div>
+    <button class="refresh-btn" (click)="loadStats()">
+      <mat-icon>refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
   </div>
+
+  <!-- Stats grid -->
+  <div class="stats-grid">
+
+    <mat-card class="stat-card total">
+      <mat-card-content>
+        <div class="stat-icon-wrap">
+          <mat-icon>home_work</mat-icon>
+        </div>
+        <div class="stat-body">
+          <span class="stat-label">Total Properties</span>
+          <span class="stat-value">{{ stats.total }}</span>
+        </div>
+      </mat-card-content>
+      <div class="stat-bar"></div>
+    </mat-card>
+
+    <mat-card class="stat-card available">
+      <mat-card-content>
+        <div class="stat-icon-wrap">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-body">
+          <span class="stat-label">Available</span>
+          <span class="stat-value">{{ stats.available }}</span>
+        </div>
+      </mat-card-content>
+      <div class="stat-bar"></div>
+    </mat-card>
+
+    <mat-card class="stat-card sold">
+      <mat-card-content>
+        <div class="stat-icon-wrap">
+          <mat-icon>sell</mat-icon>
+        </div>
+        <div class="stat-body">
+          <span class="stat-label">Sold</span>
+          <span class="stat-value">{{ stats.sold }}</span>
+        </div>
+      </mat-card-content>
+      <div class="stat-bar"></div>
+    </mat-card>
+
+    <mat-card class="stat-card rented">
+      <mat-card-content>
+        <div class="stat-icon-wrap">
+          <mat-icon>key</mat-icon>
+        </div>
+        <div class="stat-body">
+          <span class="stat-label">Rented</span>
+          <span class="stat-value">{{ stats.rented }}</span>
+        </div>
+      </mat-card-content>
+      <div class="stat-bar"></div>
+    </mat-card>
+
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section-header">
+    <h2 class="section-title">Quick Actions</h2>
+  </div>
+
+  <div class="actions-grid">
+
+    <mat-card class="action-card" routerLink="/property-form">
+      <mat-card-content>
+        <div class="action-icon-wrap add">
+          <mat-icon>add_home</mat-icon>
+        </div>
+        <div class="action-body">
+          <span class="action-title">Add Property</span>
+          <span class="action-desc">List a new property for sale or rent</span>
+        </div>
+        <mat-icon class="action-arrow">chevron_right</mat-icon>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="action-card" routerLink="/property-list">
+      <mat-card-content>
+        <div class="action-icon-wrap view">
+          <mat-icon>format_list_bulleted</mat-icon>
+        </div>
+        <div class="action-body">
+          <span class="action-title">View All Properties</span>
+          <span class="action-desc">Browse, search and manage listings</span>
+        </div>
+        <mat-icon class="action-arrow">chevron_right</mat-icon>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
 </div>

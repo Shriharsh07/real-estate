@@ -30,6 +30,7 @@ export class Login implements OnInit {
 
   username = '';
   password = '';
+  showPassword = false;
 
   constructor(
     private auth: Auth,

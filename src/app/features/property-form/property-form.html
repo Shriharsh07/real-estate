@@ -1,175 +1,203 @@
-<div class="property-form-container">
+<div class="property-form-page">
+
+  <!-- Page header -->
   <div class="page-header">
-    <h2>🏠 Add Property</h2>
-    <p class="subtitle">Fill in the details below to list a new property</p>
+    <div class="page-header-left">
+      <h1 class="page-title">Add Property</h1>
+      <p class="page-subtitle">Fill in the details below to list a new property</p>
+    </div>
+    <a class="cancel-top-btn" routerLink="/property-list">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to List</span>
+    </a>
   </div>
 
   <mat-card class="form-card">
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="submit()">
-        <!-- Basic Information Section -->
+
+        <!-- Basic Information -->
         <div class="form-section">
-          <h3>📋 Basic Information</h3>
-          
-          <mat-form-field appearance="outline" class="full-width">
+          <div class="section-label">
+            <mat-icon>info</mat-icon>
+            <span>Basic Information</span>
+          </div>
+
+          <mat-form-field appearance="outline" class="field-full">
             <mat-label>Property Name</mat-label>
-            <mat-icon matPrefix>🏷️</mat-icon>
-            <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" required />
+            <mat-icon matPrefix class="field-icon">home</mat-icon>
+            <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" />
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width mt-16">
+          <mat-form-field appearance="outline" class="field-full">
             <mat-label>Description</mat-label>
-            <mat-icon matPrefix>📝</mat-icon>
+            <mat-icon matPrefix class="field-icon">notes</mat-icon>
             <textarea matInput formControlName="description" rows="3" placeholder="Brief description of the property"></textarea>
           </mat-form-field>
 
-          <div class="form-grid mt-16">
+          <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Location</mat-label>
-              <mat-icon matPrefix>📍</mat-icon>
-              <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" required />
+              <mat-icon matPrefix class="field-icon">location_on</mat-icon>
+              <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Pincode</mat-label>
-              <mat-icon matPrefix>🔢</mat-icon>
-              <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6" (keypress)="$event.charCode >= 48 && $event.charCode <= 57" required />
+              <mat-icon matPrefix class="field-icon">pin</mat-icon>
+              <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6"
+                     (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
               <mat-error *ngIf="form.get('pincode')?.hasError('pattern')">Pincode must be exactly 6 digits</mat-error>
             </mat-form-field>
           </div>
         </div>
 
-        <!-- Property Details Section -->
+        <!-- Property Details -->
         <div class="form-section">
-          <h3>🔍 Property Details</h3>
+          <div class="section-label">
+            <mat-icon>tune</mat-icon>
+            <span>Property Details</span>
+          </div>
 
           <div class="form-grid">
             <mat-form-field appearance="outline">
               <mat-label>Property Type</mat-label>
-              <mat-select formControlName="type" required>
-                <mat-option value="house">🏠 House</mat-option>
-                <mat-option value="apartment">🏢 Apartment</mat-option>
-                <mat-option value="duplex">🏘️ Duplex</mat-option>
-                <mat-option value="land">🌳 Land</mat-option>
-                <mat-option value="commercial">🏬 Commercial</mat-option>
+              <mat-icon matPrefix class="field-icon">home_work</mat-icon>
+              <mat-select formControlName="type">
+                <mat-option value="house">House</mat-option>
+                <mat-option value="apartment">Apartment</mat-option>
+                <mat-option value="duplex">Duplex</mat-option>
+                <mat-option value="land">Land</mat-option>
+                <mat-option value="commercial">Commercial</mat-option>
               </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Status</mat-label>
-              <mat-select formControlName="status" required>
-                <mat-option value="available">✅ Available</mat-option>
-                <mat-option value="sold">🎉 Sold</mat-option>
-                <mat-option value="rented">🔑 Rented</mat-option>
+              <mat-icon matPrefix class="field-icon">flag</mat-icon>
+              <mat-select formControlName="status">
+                <mat-option value="available">Available</mat-option>
+                <mat-option value="sold">Sold</mat-option>
+                <mat-option value="rented">Rented</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
 
-        <!-- House-Specific Details Section -->
+        <!-- Dimensions -->
         <div class="form-section">
-          <h3>🏗️ Property Dimensions</h3>
-          <div class="form-grid">
+          <div class="section-label">
+            <mat-icon>straighten</mat-icon>
+            <span>Property Dimensions</span>
+          </div>
+
+          <div class="form-grid form-grid-3">
             <mat-form-field appearance="outline">
               <mat-label>Length (ft)</mat-label>
-              <mat-icon matPrefix>📐</mat-icon>
-              <input matInput type="number" formControlName="length" placeholder="e.g., 40" required/>
+              <mat-icon matPrefix class="field-icon">width</mat-icon>
+              <input matInput type="number" formControlName="length" placeholder="e.g., 40" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Width (ft)</mat-label>
-              <mat-icon matPrefix>📐</mat-icon>
-              <input matInput type="number" formControlName="width" placeholder="e.g., 30" required/>
+              <mat-icon matPrefix class="field-icon">height</mat-icon>
+              <input matInput type="number" formControlName="width" placeholder="e.g., 30" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Total Sq. Ft</mat-label>
-              <mat-icon matPrefix>📏</mat-icon>
-              <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated from Length × Width" readonly />
+              <mat-icon matPrefix class="field-icon">square_foot</mat-icon>
+              <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated" readonly />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Bedrooms</mat-label>
-              <mat-icon matPrefix>🛏️</mat-icon>
-              <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" required/>
+              <mat-icon matPrefix class="field-icon">bed</mat-icon>
+              <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Bathrooms</mat-label>
-              <mat-icon matPrefix>🚿</mat-icon>
-              <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" required/>
+              <mat-icon matPrefix class="field-icon">bathtub</mat-icon>
+              <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" />
             </mat-form-field>
           </div>
         </div>
 
-        <!-- Pricing Section -->
+        <!-- Pricing -->
         <div class="form-section">
-          <h3>💰 Pricing</h3>
-          
-          <mat-form-field appearance="outline" class="full-width">
+          <div class="section-label">
+            <mat-icon>payments</mat-icon>
+            <span>Pricing</span>
+          </div>
+
+          <mat-form-field appearance="outline" class="field-price">
             <mat-label>Price</mat-label>
-            <mat-icon matPrefix>�</mat-icon>
-            <span matTextPrefix>₹&nbsp;</span>
-            <input matInput type="number" formControlName="price" placeholder="0.00" required />
+            <mat-icon matPrefix class="field-icon">currency_rupee</mat-icon>
+            <input matInput type="number" formControlName="price" placeholder="0" />
           </mat-form-field>
         </div>
 
-        <!-- Image Upload Section -->
+        <!-- Image Upload -->
         <div class="form-section">
-          <h3>📸 Property Images</h3>
-          
-          <div class="upload-area">
-            <input 
-              type="file" 
-              multiple 
-              accept="image/*"
-              (change)="onFileSelect($event)" 
-              #fileInput
-              hidden
-            />
-            <button mat-stroked-button type="button" (click)="fileInput.click()" class="upload-button">
-              📤 Click to Upload Images
-            </button>
-            <p class="upload-hint">or drag and drop your images here</p>
+          <div class="section-label">
+            <mat-icon>photo_library</mat-icon>
+            <span>Property Images</span>
           </div>
 
-          <!-- Upload Progress -->
+          <input type="file" multiple accept="image/*"
+                 (change)="onFileSelect($event)" #fileInput hidden />
+
+          <div class="upload-area" (click)="fileInput.click()">
+            <mat-icon class="upload-icon">cloud_upload</mat-icon>
+            <p class="upload-title">Click to upload images</p>
+            <p class="upload-hint">PNG, JPG or WEBP &bull; Max 10 MB each</p>
+          </div>
+
+          <!-- Uploading spinner -->
           <div *ngIf="isUploading" class="upload-progress">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Uploading images...</p>
+            <mat-spinner diameter="36"></mat-spinner>
+            <span>Uploading images&hellip;</span>
           </div>
 
-          <!-- Selected Files Preview -->
+          <!-- Selected files list -->
           <div *ngIf="selectedFiles.length > 0 && !isUploading" class="preview-section">
-            <h4>Selected Images ({{ selectedFiles.length }})</h4>
+            <p class="preview-label">{{ selectedFiles.length }} file{{ selectedFiles.length > 1 ? 's' : '' }} selected</p>
             <div class="file-list">
               <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
-                <span class="file-icon">📄</span>
+                <mat-icon class="file-icon">image</mat-icon>
                 <span class="file-name">{{ file.name }}</span>
-                <button mat-icon-button type="button" class="remove-file" (click)="removeFile(i)" title="Remove">✕</button>
+                <button type="button" class="remove-btn" (click)="removeFile(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Uploaded Images Display -->
+          <!-- Uploaded images grid -->
           <div *ngIf="uploadedImageUrls.length > 0" class="uploaded-section">
-            <h4>✅ Uploaded Images</h4>
+            <p class="preview-label">
+              <mat-icon class="check-icon">check_circle</mat-icon>
+              {{ uploadedImageUrls.length }} image{{ uploadedImageUrls.length > 1 ? 's' : '' }} uploaded
+            </p>
             <div class="image-preview-grid">
               <div *ngFor="let url of uploadedImageUrls" class="preview-item">
-                <img [src]="url" alt="Uploaded" class="preview-image" />
+                <img [src]="url" alt="Uploaded" />
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Form Actions -->
-        <div class="form-actions mt-24">
-          <button mat-raised-button color="primary" type="submit" class="submit-button">
-            💾 Save Property
+        <!-- Form actions -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            <mat-icon>save</mat-icon>
+            <span>Save Property</span>
           </button>
-          <button mat-stroked-button type="button" routerLink="/property-list" class="cancel-button">
-            ❌ Cancel
-          </button>
+          <a class="cancel-btn" routerLink="/property-list">
+            <mat-icon>close</mat-icon>
+            <span>Cancel</span>
+          </a>
         </div>
       </form>
     </mat-card-content>

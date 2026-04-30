@@ -1,40 +1,51 @@
 <div class="app-container">
-  <!-- Header/Navbar -->
+
   @if (!isLoginPage) {
   <header class="app-header">
     <div class="navbar">
-      <div class="navbar-brand">
-        <span class="brand-icon">🏢</span>
-        <h1 class="brand-title">Real Estate Pro</h1>
-      </div>
-      
+
+      <!-- Brand -->
+      <a routerLink="/dashboard" class="navbar-brand">
+        <div class="brand-icon-wrap">
+          <mat-icon class="brand-mat-icon">apartment</mat-icon>
+        </div>
+        <span class="brand-name">EstateHub</span>
+      </a>
+
+      <!-- Nav links -->
       <nav class="navbar-nav">
         <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
-          <span class="nav-icon">📊</span>
-          Dashboard
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
         </a>
         <a routerLink="/property-list" routerLinkActive="active" class="nav-link">
-          <span class="nav-icon">🏠</span>
-          Properties
+          <mat-icon>home_work</mat-icon>
+          <span>Properties</span>
         </a>
-        <a (click)="logout()" class="nav-link logout">
-          <span class="nav-icon">🚪</span>
-          Logout
+        <a routerLink="/property-form" routerLinkActive="active" class="nav-link">
+          <mat-icon>add_circle_outline</mat-icon>
+          <span>Add Property</span>
         </a>
       </nav>
+
+      <!-- Right side -->
+      <div class="navbar-end">
+        <div class="user-chip">
+          <mat-icon class="user-icon">account_circle</mat-icon>
+          <span class="user-label">Admin</span>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </div>
+
     </div>
   </header>
   }
 
-  <!-- Main Content -->
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
 
-  @if (!isLoginPage) {
-  <!-- Footer -->
-  <footer class="app-footer">
-    <p>&copy; 2024 Real Estate Pro. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-  </footer>
-  }
 </div>

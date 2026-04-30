@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef  } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 import { PropertyService } from "../../core/services/property";
 import { CommonModule } from "@angular/common";
@@ -8,7 +9,7 @@ import { CommonModule } from "@angular/common";
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss",
 })
