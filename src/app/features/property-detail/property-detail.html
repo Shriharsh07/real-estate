@@ -1,0 +1,231 @@
+<div class="detail-page">
+
+  <!-- Loading -->
+  <div class="state-card" *ngIf="loading">
+    <mat-icon class="state-icon spin">autorenew</mat-icon>
+    <p>Loading property details…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="state-card error" *ngIf="error && !loading">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <h3>Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Back to Listings
+    </button>
+  </div>
+
+  <!-- Content -->
+  <ng-container *ngIf="property && !loading">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <button class="back-btn" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Back to Listings</span>
+      </button>
+      <a class="edit-btn" [routerLink]="['/property-form', property._id]">
+        <mat-icon>edit</mat-icon>
+        <span>Edit Property</span>
+      </a>
+    </div>
+
+    <!-- Details section -->
+    <div class="details-section">
+
+      <!-- Header -->
+      <div class="property-header">
+        <div class="header-left">
+          <h1 class="property-title">{{ property.propertyName }}</h1>
+          <div class="location-row">
+            <mat-icon>location_on</mat-icon>
+            <span>{{ property.location }}<span *ngIf="property.pincode">&nbsp;– {{ property.pincode }}</span></span>
+          </div>
+        </div>
+        <div class="price-block">
+          <span class="price-label">Price</span>
+          <span class="price-value">₹{{ property.price | number }}</span>
+        </div>
+      </div>
+
+      <!-- Type chip + status badge -->
+      <div class="chips-row">
+        <span class="chip type-chip">
+          <mat-icon>home_work</mat-icon>
+          {{ property.type | titlecase }}
+        </span>
+        <span class="chip status-chip" [ngClass]="'chip-' + property.status">
+          {{ property.status | titlecase }}
+        </span>
+      </div>
+
+      <!-- Specs grid -->
+      <div class="specs-grid" *ngIf="property.bedrooms || property.bathrooms || property.totalSqft || property.length || property.width">
+        <div class="spec-card" *ngIf="property.bedrooms">
+          <mat-icon>bed</mat-icon>
+          <span class="spec-value">{{ property.bedrooms }}</span>
+          <span class="spec-label">Bedrooms</span>
+        </div>
+        <div class="spec-card" *ngIf="property.bathrooms">
+          <mat-icon>bathtub</mat-icon>
+          <span class="spec-value">{{ property.bathrooms }}</span>
+          <span class="spec-label">Bathrooms</span>
+        </div>
+        <div class="spec-card" *ngIf="property.totalSqft">
+          <mat-icon>square_foot</mat-icon>
+          <span class="spec-value">{{ property.totalSqft }}</span>
+          <span class="spec-label">Sq. Ft.</span>
+        </div>
+        <div class="spec-card" *ngIf="property.length && property.width">
+          <mat-icon>straighten</mat-icon>
+          <span class="spec-value">{{ property.length }} × {{ property.width }}</span>
+          <span class="spec-label">Dimensions (ft)</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="description-section" *ngIf="property.description">
+        <h2 class="section-title">Description</h2>
+        <p class="description-text">{{ property.description }}</p>
+      </div>
+
+      <!-- Meta info -->
+      <div class="meta-section">
+        <h2 class="section-title">Property Info</h2>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-key">Listed</span>
+            <span class="meta-val">{{ property.createdAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Last Updated</span>
+            <span class="meta-val">{{ property.updatedAt | date:'mediumDate' }}</span>
+          </div>
+          <div class="meta-item" *ngIf="property.pincode">
+            <span class="meta-key">Pincode</span>
+            <span class="meta-val">{{ property.pincode }}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Status</span>
+            <span class="meta-val status-val" [ngClass]="'txt-' + property.status">{{ property.status | titlecase }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Images gallery at bottom -->
+    <div class="gallery-section" *ngIf="property.images?.length">
+      <h2 class="gallery-title">
+        <mat-icon>photo_library</mat-icon>
+        Photos
+        <span class="image-count">{{ property.images.length }}</span>
+      </h2>
+
+      <!-- Main viewer -->
+      <div class="main-image-wrap">
+        <!-- Blurred backdrop fills dark sidebars -->
+        <div
+          class="img-backdrop"
+          [style.backgroundImage]="'url(' + property.images[activeImageIndex] + ')'"
+        ></div>
+
+        <img
+          [src]="property.images[activeImageIndex]"
+          [alt]="property.propertyName"
+          class="main-image"
+          (click)="openLightbox()"
+          title="Click to view full size"
+        />
+
+        <!-- Zoom hint -->
+        <span class="zoom-hint">
+          <mat-icon>zoom_in</mat-icon> Click to expand
+        </span>
+
+        <!-- Nav arrows -->
+        <button
+          *ngIf="property.images.length > 1"
+          class="gallery-arrow left"
+          (click)="prevImage()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          *ngIf="property.images.length > 1"
+          class="gallery-arrow right"
+          (click)="nextImage()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+
+        <!-- Counter -->
+        <span *ngIf="property.images.length > 1" class="image-counter">
+          {{ activeImageIndex + 1 }} / {{ property.images.length }}
+        </span>
+      </div>
+
+      <!-- Thumbnails -->
+      <div class="thumbnails" *ngIf="property.images.length > 1">
+        <button
+          *ngFor="let img of property.images; let i = index"
+          class="thumb-btn"
+          [class.active]="i === activeImageIndex"
+          (click)="setActiveImage(i)"
+        >
+          <img [src]="img" [alt]="'Photo ' + (i + 1)" />
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" *ngIf="lightboxOpen" (click)="closeLightbox()">
+    <div class="lightbox-inner" (click)="$event.stopPropagation()">
+
+      <!-- Toolbar -->
+      <div class="lightbox-toolbar">
+        <span class="lightbox-counter" *ngIf="property.images.length > 1">
+          {{ activeImageIndex + 1 }} / {{ property.images.length }}
+        </span>
+        <div class="lightbox-actions">
+          <button class="lb-btn" (click)="downloadImage()" title="Download">
+            <mat-icon>download</mat-icon>
+            <span>Download</span>
+          </button>
+          <button class="lb-btn close" (click)="closeLightbox()" title="Close (Esc)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Full image -->
+      <div class="lightbox-image-wrap">
+        <img
+          [src]="property.images[activeImageIndex]"
+          [alt]="property.propertyName"
+          class="lightbox-image"
+        />
+      </div>
+
+      <!-- Nav arrows -->
+      <button
+        *ngIf="property.images.length > 1"
+        class="lb-arrow left"
+        (click)="prevImage()"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button
+        *ngIf="property.images.length > 1"
+        class="lb-arrow right"
+        (click)="nextImage()"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+    </div>
+  </div>
+
+</div>

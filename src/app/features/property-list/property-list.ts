@@ -23,7 +23,8 @@ export class PropertyList implements OnInit {
 
   constructor(
     private propertyService: PropertyService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -54,6 +55,10 @@ export class PropertyList implements OnInit {
           this.cdr.markForCheck();
         }
       });
+  }
+
+  viewDetails(id: string) {
+    this.router.navigate(['/property', id]);
   }
 
   delete(id: string) {

@@ -23,6 +23,10 @@ export class PropertyService {
     return this.http.put(`/api/properties/${id}`, data);
   }
 
+  getProperty(id: string) {
+    return this.http.get(`/api/properties/${id}`);
+  }
+
   deleteProperty(id: string) {
     return this.http.delete(`/api/properties/${id}`);
   }

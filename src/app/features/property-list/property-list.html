@@ -30,7 +30,7 @@
 
   <!-- Properties Grid -->
   <div class="properties-grid" *ngIf="properties && properties.length > 0 && !loading && !error">
-    <mat-card class="property-card" *ngFor="let p of properties">
+    <mat-card class="property-card" *ngFor="let p of properties" (click)="viewDetails(p._id)">
 
       <!-- Image -->
       <div class="property-image">
@@ -43,7 +43,7 @@
 
       <!-- Info -->
       <mat-card-content class="property-info">
-        <h3 class="property-title">{{ p.title }}</h3>
+        <h3 class="property-title">{{ p.propertyName }}</h3>
 
         <div class="meta-row">
           <mat-icon class="meta-icon">location_on</mat-icon>
@@ -60,11 +60,15 @@
         </div>
 
         <div class="property-actions">
-          <a class="action-btn edit" [routerLink]="['/property-form', p._id]">
+          <button class="action-btn view" (click)="viewDetails(p._id); $event.stopPropagation()">
+            <mat-icon>visibility</mat-icon>
+            <span>View</span>
+          </button>
+          <a class="action-btn edit" [routerLink]="['/property-form', p._id]" (click)="$event.stopPropagation()">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
           </a>
-          <button class="action-btn delete" (click)="delete(p._id)">
+          <button class="action-btn delete" (click)="delete(p._id); $event.stopPropagation()">
             <mat-icon>delete_outline</mat-icon>
             <span>Delete</span>
           </button>
