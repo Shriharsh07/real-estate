@@ -1,0 +1,114 @@
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 28px 22px;
+  min-width: 320px;
+  max-width: 400px;
+  text-align: center;
+}
+
+// ── Icon ─────────────────────────────────────────────────────────────────────
+.dialog-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+
+  mat-icon {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+  }
+
+  &.danger {
+    background: #fee2e2;
+    mat-icon { color: #ef4444; }
+  }
+
+  &.warning {
+    background: #fef3c7;
+    mat-icon { color: #f59e0b; }
+  }
+
+  &.info {
+    background: #e0f2fe;
+    mat-icon { color: #0284c7; }
+  }
+}
+
+// ── Text ─────────────────────────────────────────────────────────────────────
+.dialog-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dialog-message {
+  margin: 0 0 24px;
+  font-size: 13.5px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+%btn-base {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover { opacity: 0.88; transform: translateY(-1px); }
+}
+
+.btn-cancel {
+  @extend %btn-base;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-confirm {
+  @extend %btn-base;
+
+  &.danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.3);
+  }
+
+  &.warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(245, 158, 11, 0.3);
+  }
+
+  &.info {
+    background: linear-gradient(135deg, #00acc1, #0284c7);
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(0, 172, 193, 0.3);
+  }
+}

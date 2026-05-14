@@ -1,0 +1,21 @@
+<div class="confirm-dialog">
+
+  <div class="dialog-icon-wrap" [class]="data.type || 'info'">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+
+  <h2 class="dialog-title">{{ data.title }}</h2>
+  <p class="dialog-message">{{ data.message }}</p>
+
+  <div class="dialog-actions">
+    <button class="btn-cancel" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{ data.cancelLabel || 'Cancel' }}</span>
+    </button>
+    <button class="btn-confirm" [class]="data.type || 'info'" (click)="confirm()">
+      <mat-icon>{{ data.type === 'danger' ? 'delete_outline' : 'check' }}</mat-icon>
+      <span>{{ data.confirmLabel || 'Confirm' }}</span>
+    </button>
+  </div>
+
+</div>

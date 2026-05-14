@@ -76,9 +76,23 @@
               <mat-label>Status</mat-label>
               <mat-icon matPrefix class="field-icon">flag</mat-icon>
               <mat-select formControlName="status">
-                <mat-option value="available">Available</mat-option>
+                <mat-option value="for-sale">For Sale</mat-option>
+                <mat-option value="for-rent">For Rent</mat-option>
                 <mat-option value="sold">Sold</mat-option>
                 <mat-option value="rented">Rented</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Veg / Non-Veg preference — only for House, Apartment, Duplex -->
+          <div class="form-grid" *ngIf="showVegField" style="margin-top: 10px;">
+            <mat-form-field appearance="outline">
+              <mat-label>Tenant Preference</mat-label>
+              <mat-icon matPrefix class="field-icon">restaurant</mat-icon>
+              <mat-select formControlName="vegPreference">
+                <mat-option value="veg">Veg Only</mat-option>
+                <mat-option value="non-veg">Non-Veg Allowed</mat-option>
+                <mat-option value="any">No Preference</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

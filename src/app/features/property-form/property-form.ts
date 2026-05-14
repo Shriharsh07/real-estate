@@ -52,7 +52,8 @@ export class PropertyFormComponent implements OnInit {
       location: [''],
       pincode: ['', [Validators.minLength(6), Validators.maxLength(6), Validators.pattern(/^[0-9]{6}$/)]],
       type: ['house'],
-      status: ['available'],
+      status: ['for-sale'],
+      vegPreference: ['any'],
       price: [''],
       images: [[]],
       length: [null],
@@ -71,6 +72,19 @@ export class PropertyFormComponent implements OnInit {
       const sqft = length && width ? length * width : null;
       this.form.get('totalSqft')!.setValue(sqft, { emitEvent: false });
     });
+
+    // Reset vegPreference when type changes away from residential
+    this.form.get('type')!.valueChanges.subscribe((type: string) => {
+      if (!['house', 'apartment', 'duplex'].includes(type)) {
+        this.form.get('vegPreference')!.setValue(null, { emitEvent: false });
+      } else if (!this.form.get('vegPreference')!.value) {
+        this.form.get('vegPreference')!.setValue('any', { emitEvent: false });
+      }
+    });
+  }
+
+  get showVegField(): boolean {
+    return ['house', 'apartment', 'duplex'].includes(this.form?.get('type')?.value);
   }
 
   // 📸 Handle file selection

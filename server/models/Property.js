@@ -14,8 +14,8 @@ const propertySchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["available", "sold", "rented"],
-    default: "available"
+    enum: ["for-sale", "for-rent", "sold", "rented"],
+    default: "for-sale"
   },
 
   price: { type: Number, required: true },
@@ -27,7 +27,14 @@ const propertySchema = new mongoose.Schema({
   width  : { type: Number },
   bedrooms: { type: Number },
   bathrooms: { type: Number },
-  totalSqft: { type: Number }
+  totalSqft: { type: Number },
+
+  // residential preference (house / apartment / duplex only)
+  vegPreference: {
+    type: String,
+    enum: ["veg", "non-veg", "any"],
+    default: null
+  }
 
 }, { timestamps: true });
 

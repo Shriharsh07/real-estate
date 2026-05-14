@@ -1,13 +1,13 @@
 const Property = require("../models/Property");
 
 const validStatusByType = {
-  sale: ["available", "sold"],
-  rent: ["available", "rented"],
-  house: ["available", "sold", "rented"],
-  apartment : ["available", "sold", "rented"],
-  duplex : ["available", "sold", "rented"],
-  land : ["available", "sold", "rented"],
-  commercial : ["available", "sold", "rented"]
+  sale: ["for-sale", "sold"],
+  rent: ["for-rent", "rented"],
+  house: ["for-sale", "for-rent", "sold", "rented"],
+  apartment : ["for-sale", "for-rent", "sold", "rented"],
+  duplex : ["for-sale", "for-rent", "sold", "rented"],
+  land : ["for-sale", "for-rent", "sold", "rented"],
+  commercial : ["for-sale", "for-rent", "sold", "rented"]
 };
 
 // CREATE

@@ -558,7 +558,8 @@
     color: #1d4ed8;
   }
 
-  &.chip-available { background: #d1fae5; color: #065f46; }
+  &.chip-for-sale  { background: #d1fae5; color: #065f46; }
+  &.chip-for-rent  { background: #dbeafe; color: #1e40af; }
   &.chip-sold      { background: #fee2e2; color: #991b1b; }
   &.chip-rented    { background: #fef3c7; color: #92400e; }
 }
@@ -657,7 +658,8 @@
   font-weight: 600;
   color: #334155;
 
-  &.txt-available { color: #065f46; }
+  &.txt-for-sale  { color: #065f46; }
+  &.txt-for-rent  { color: #1e40af; }
   &.txt-sold      { color: #991b1b; }
   &.txt-rented    { color: #92400e; }
 }

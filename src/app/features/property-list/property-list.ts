@@ -5,7 +5,9 @@ import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
+import { MatDialog } from "@angular/material/dialog";
 import { finalize } from 'rxjs/operators';
+import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog";
 
 @Component({
   selector: "app-property-list",
@@ -24,7 +26,8 @@ export class PropertyList implements OnInit {
   constructor(
     private propertyService: PropertyService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -62,8 +65,22 @@ export class PropertyList implements OnInit {
   }
 
   delete(id: string) {
-    this.propertyService.deleteProperty(id).subscribe(() => {
-      this.loadProperties();
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Property',
+        message: 'Are you sure you want to delete this property? This cannot be undone.',
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        type: 'danger',
+      },
+      width: '400px',
+      disableClose: true,
+    });
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+      this.propertyService.deleteProperty(id).subscribe(() => {
+        this.loadProperties();
+      });
     });
   }
 }
