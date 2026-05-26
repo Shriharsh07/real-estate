@@ -3,39 +3,45 @@ package handlers
 import (
 	"context"
 	"io"
+	"net/http"
+
 	"real-estate-api/config"
 
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
-	"github.com/gofiber/fiber/v2"
 )
 
-func UploadImages(c *fiber.Ctx) error {
-	form, err := c.MultipartForm()
+func UploadImages(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	files := form.File["images"]
+	files := r.MultipartForm.File["images"]
 	if len(files) == 0 {
-		return c.Status(400).JSON(fiber.Map{"error": "No files uploaded"})
+		writeError(w, http.StatusBadRequest, "No files uploaded")
+		return
 	}
 
 	if len(files) > 5 {
-		return c.Status(400).JSON(fiber.Map{"error": "Maximum 5 images allowed"})
+		writeError(w, http.StatusBadRequest, "Maximum 5 images allowed")
+		return
 	}
 
 	var imageUrls []string
 
-	for _, file := range files {
-		fileContent, err := file.Open()
+	for _, fileHeader := range files {
+		file, err := fileHeader.Open()
 		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
 		}
-		defer fileContent.Close()
+		defer file.Close()
 
-		bytes, err := io.ReadAll(fileContent)
+		bytes, err := io.ReadAll(file)
 		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
 		}
 
 		uploadParams := uploader.UploadParams{
@@ -44,11 +50,12 @@ func UploadImages(c *fiber.Ctx) error {
 
 		uploadResult, err := config.CloudinaryClient.Upload.Upload(context.Background(), bytes, uploadParams)
 		if err != nil {
-			return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+			writeError(w, http.StatusInternalServerError, err.Error())
+			return
 		}
 
 		imageUrls = append(imageUrls, uploadResult.SecureURL)
 	}
 
-	return c.JSON(imageUrls)
+	writeJSON(w, http.StatusOK, imageUrls)
 }

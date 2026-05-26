@@ -2,68 +2,76 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"real-estate-api/config"
 	"real-estate-api/handlers"
 	"real-estate-api/middleware"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 )
 
-func main() {
+func init() {
 	godotenv.Load()
-
-	app := fiber.New(fiber.Config{
-		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			code := fiber.StatusInternalServerError
-			if e, ok := err.(*fiber.Error); ok {
-				code = e.Code
-			}
-			return c.Status(code).JSON(fiber.Map{"error": err.Error()})
-		},
-	})
-
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-	}))
-
 	config.ConnectDB()
 	config.InitCloudinary()
+}
 
-	api := app.Group("/api")
+func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
-	auth := api.Group("/auth")
-	auth.Post("/login", handlers.Login)
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
-	properties := api.Group("/properties")
-	properties.Get("/stats", middleware.AuthMiddleware, handlers.GetStats)
-	properties.Post("/", middleware.AuthMiddleware, handlers.CreateProperty)
-	properties.Get("/", handlers.GetProperties)
-	properties.Get("/:id", middleware.AuthMiddleware, handlers.GetPropertyById)
-	properties.Put("/:id", middleware.AuthMiddleware, handlers.UpdateProperty)
-	properties.Delete("/:id", middleware.AuthMiddleware, handlers.DeleteProperty)
+	path := r.URL.Path
 
-	owners := api.Group("/owners")
-	owners.Post("/", middleware.AuthMiddleware, handlers.CreateOwner)
-	owners.Get("/", handlers.GetOwners)
-	owners.Get("/:id", middleware.AuthMiddleware, handlers.GetOwnerById)
-	owners.Put("/:id", middleware.AuthMiddleware, handlers.UpdateOwner)
-	owners.Delete("/:id", middleware.AuthMiddleware, handlers.DeleteOwner)
+	switch {
+	case path == "/api/auth/login" && r.Method == "POST":
+		handlers.Login(w, r)
+	case path == "/api/properties/stats" && r.Method == "GET":
+		middleware.AuthMiddleware(handlers.GetStats)(w, r)
+	case path == "/api/properties" && r.Method == "POST":
+		middleware.AuthMiddleware(handlers.CreateProperty)(w, r)
+	case path == "/api/properties" && r.Method == "GET":
+		handlers.GetProperties(w, r)
+	case matchPath(path, "/api/properties/") && r.Method == "GET":
+		middleware.AuthMiddleware(handlers.GetPropertyById)(w, r)
+	case matchPath(path, "/api/properties/") && r.Method == "PUT":
+		middleware.AuthMiddleware(handlers.UpdateProperty)(w, r)
+	case matchPath(path, "/api/properties/") && r.Method == "DELETE":
+		middleware.AuthMiddleware(handlers.DeleteProperty)(w, r)
+	case path == "/api/owners" && r.Method == "POST":
+		middleware.AuthMiddleware(handlers.CreateOwner)(w, r)
+	case path == "/api/owners" && r.Method == "GET":
+		handlers.GetOwners(w, r)
+	case matchPath(path, "/api/owners/") && r.Method == "GET":
+		middleware.AuthMiddleware(handlers.GetOwnerById)(w, r)
+	case matchPath(path, "/api/owners/") && r.Method == "PUT":
+		middleware.AuthMiddleware(handlers.UpdateOwner)(w, r)
+	case matchPath(path, "/api/owners/") && r.Method == "DELETE":
+		middleware.AuthMiddleware(handlers.DeleteOwner)(w, r)
+	case path == "/api/upload" && r.Method == "POST":
+		middleware.AuthMiddleware(handlers.UploadImages)(w, r)
+	default:
+		http.NotFound(w, r)
+	}
+}
 
-	upload := api.Group("/upload")
-	upload.Post("/", middleware.AuthMiddleware, handlers.UploadImages)
+func matchPath(path, prefix string) bool {
+	return len(path) > len(prefix) && path[:len(prefix)] == prefix
+}
 
+func main() {
+	http.HandleFunc("/", Handler)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
 	}
-
 	log.Printf("Server running on port %s", port)
-	if err := app.Listen(":" + port); err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

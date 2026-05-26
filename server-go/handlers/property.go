@@ -1,10 +1,14 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"time"
+
 	"real-estate-api/config"
 	"real-estate-api/models"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -20,15 +24,17 @@ var validStatusByType = map[string][]string{
 	"commercial": {"for-sale", "for-rent", "sold", "rented"},
 }
 
-func CreateProperty(c *fiber.Ctx) error {
+func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	var property models.Property
-	if err := c.BodyParser(&property); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&property); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	validStatuses, ok := validStatusByType[property.Type]
 	if !ok {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid type"})
+		writeError(w, http.StatusBadRequest, "Invalid type")
+		return
 	}
 
 	statusValid := false
@@ -40,43 +46,45 @@ func CreateProperty(c *fiber.Ctx) error {
 	}
 
 	if !statusValid {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid status for type"})
+		writeError(w, http.StatusBadRequest, "Invalid status for type")
+		return
 	}
 
-	property.CreatedAt = primitive.NewDateTimeFromTime(c.Context().Time())
-	property.UpdatedAt = primitive.NewDateTimeFromTime(c.Context().Time())
+	property.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
+	property.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
 
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
-	result, err := collection.InsertOne(c.Context(), property)
+	result, err := collection.InsertOne(context.Background(), property)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	property.ID = result.InsertedID.(primitive.ObjectID)
-	return c.Status(200).JSON(property)
+	writeJSON(w, http.StatusOK, property)
 }
 
-func GetProperties(c *fiber.Ctx) error {
+func GetProperties(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 
 	filter := bson.M{}
-	
-	if typeParam := c.Query("type"); typeParam != "" {
+
+	if typeParam := r.URL.Query().Get("type"); typeParam != "" {
 		filter["type"] = typeParam
 	}
-	if statusParam := c.Query("status"); statusParam != "" {
+	if statusParam := r.URL.Query().Get("status"); statusParam != "" {
 		filter["status"] = statusParam
 	}
-	if locationParam := c.Query("location"); locationParam != "" {
+	if locationParam := r.URL.Query().Get("location"); locationParam != "" {
 		filter["location"] = bson.M{"$regex": locationParam, "$options": "i"}
 	}
-	if ownerParam := c.Query("owner"); ownerParam != "" {
+	if ownerParam := r.URL.Query().Get("owner"); ownerParam != "" {
 		ownerID, _ := primitive.ObjectIDFromHex(ownerParam)
 		filter["owner"] = ownerID
 	}
 
-	minPrice := c.Query("minPrice")
-	maxPrice := c.Query("maxPrice")
+	minPrice := r.URL.Query().Get("minPrice")
+	maxPrice := r.URL.Query().Get("maxPrice")
 	if minPrice != "" || maxPrice != "" {
 		priceFilter := bson.M{}
 		if minPrice != "" {
@@ -89,64 +97,71 @@ func GetProperties(c *fiber.Ctx) error {
 	}
 
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
-	cursor, err := collection.Find(c.Context(), filter, opts)
+	cursor, err := collection.Find(context.Background(), filter, opts)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	var properties []models.Property
-	if err = cursor.All(c.Context(), &properties); err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	if err = cursor.All(context.Background(), &properties); err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	for i := range properties {
 		if properties[i].Owner != nil {
 			ownerCollection := config.MongoClient.Database("real-estate").Collection("owners")
 			var owner models.Owner
-			err := ownerCollection.FindOne(c.Context(), bson.M{"_id": *properties[i].Owner}).Decode(&owner)
+			err := ownerCollection.FindOne(context.Background(), bson.M{"_id": *properties[i].Owner}).Decode(&owner)
 			if err == nil {
 				properties[i].OwnerData = &owner
 			}
 		}
 	}
 
-	return c.JSON(properties)
+	writeJSON(w, http.StatusOK, properties)
 }
 
-func GetPropertyById(c *fiber.Ctx) error {
-	id := c.Params("id")
+func GetPropertyById(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 	var property models.Property
-	err = collection.FindOne(c.Context(), bson.M{"_id": objectID}).Decode(&property)
+	err = collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&property)
 	if err != nil {
-		return c.Status(404).JSON(fiber.Map{"message": "Property not found"})
+		writeError(w, http.StatusNotFound, "Property not found")
+		return
 	}
 
-	return c.JSON(property)
+	writeJSON(w, http.StatusOK, property)
 }
 
-func UpdateProperty(c *fiber.Ctx) error {
-	id := c.Params("id")
+func UpdateProperty(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	var updateData bson.M
-	if err := c.BodyParser(&updateData); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
 	if typeVal, ok := updateData["type"].(string); ok {
 		if statusVal, ok := updateData["status"].(string); ok {
 			validStatuses, ok := validStatusByType[typeVal]
 			if !ok {
-				return c.Status(400).JSON(fiber.Map{"message": "Invalid type"})
+				writeError(w, http.StatusBadRequest, "Invalid type")
+				return
 			}
 
 			statusValid := false
@@ -158,50 +173,54 @@ func UpdateProperty(c *fiber.Ctx) error {
 			}
 
 			if !statusValid {
-				return c.Status(400).JSON(fiber.Map{"message": "Invalid status for type"})
+				writeError(w, http.StatusBadRequest, "Invalid status for type")
+				return
 			}
 		}
 	}
 
-	updateData["updatedAt"] = primitive.NewDateTimeFromTime(c.Context().Time())
+	updateData["updatedAt"] = primitive.NewDateTimeFromTime(time.Now())
 
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 	update := bson.M{"$set": updateData}
-	result := collection.FindOneAndUpdate(c.Context(), bson.M{"_id": objectID}, update, options.FindOneAndUpdate().SetReturnDocument(options.After))
+	result := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objectID}, update, options.FindOneAndUpdate().SetReturnDocument(options.After))
 
 	var property models.Property
 	if err := result.Decode(&property); err != nil {
-		return c.Status(404).JSON(fiber.Map{"message": "Property not found"})
+		writeError(w, http.StatusNotFound, "Property not found")
+		return
 	}
 
-	return c.JSON(property)
+	writeJSON(w, http.StatusOK, property)
 }
 
-func DeleteProperty(c *fiber.Ctx) error {
-	id := c.Params("id")
+func DeleteProperty(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
-	_, err = collection.DeleteOne(c.Context(), bson.M{"_id": objectID})
+	_, err = collection.DeleteOne(context.Background(), bson.M{"_id": objectID})
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	return c.JSON(fiber.Map{"message": "Property deleted"})
+	writeJSON(w, http.StatusOK, map[string]string{"message": "Property deleted"})
 }
 
-func GetStats(c *fiber.Ctx) error {
+func GetStats(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 
-	total, _ := collection.CountDocuments(c.Context(), bson.M{})
-	available, _ := collection.CountDocuments(c.Context(), bson.M{"status": "available"})
-	sold, _ := collection.CountDocuments(c.Context(), bson.M{"status": "sold"})
-	rented, _ := collection.CountDocuments(c.Context(), bson.M{"status": "rented"})
+	total, _ := collection.CountDocuments(context.Background(), bson.M{})
+	available, _ := collection.CountDocuments(context.Background(), bson.M{"status": "available"})
+	sold, _ := collection.CountDocuments(context.Background(), bson.M{"status": "sold"})
+	rented, _ := collection.CountDocuments(context.Background(), bson.M{"status": "rented"})
 
-	return c.JSON(fiber.Map{
+	writeJSON(w, http.StatusOK, map[string]interface{}{
 		"total":     total,
 		"available": available,
 		"sold":      sold,

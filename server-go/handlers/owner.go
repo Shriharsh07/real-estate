@@ -1,69 +1,79 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"time"
+
 	"real-estate-api/config"
 	"real-estate-api/models"
 
-	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreateOwner(c *fiber.Ctx) error {
+func CreateOwner(w http.ResponseWriter, r *http.Request) {
 	var owner models.Owner
-	if err := c.BodyParser(&owner); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&owner); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	owner.CreatedAt = primitive.NewDateTimeFromTime(c.Context().Time())
-	owner.UpdatedAt = primitive.NewDateTimeFromTime(c.Context().Time())
+	owner.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
+	owner.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
 
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
-	result, err := collection.InsertOne(c.Context(), owner)
+	result, err := collection.InsertOne(context.Background(), owner)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	owner.ID = result.InsertedID.(primitive.ObjectID)
-	return c.Status(200).JSON(owner)
+	writeJSON(w, http.StatusOK, owner)
 }
 
-func GetOwners(c *fiber.Ctx) error {
+func GetOwners(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
-	cursor, err := collection.Find(c.Context(), bson.M{}, opts)
+	cursor, err := collection.Find(context.Background(), bson.M{}, opts)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	var owners []models.Owner
-	if err = cursor.All(c.Context(), &owners); err != nil {
-		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	if err = cursor.All(context.Background(), &owners); err != nil {
+		writeError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
-	return c.JSON(owners)
+	writeJSON(w, http.StatusOK, owners)
 }
 
-func GetOwnerById(c *fiber.Ctx) error {
-	id := c.Params("id")
+func GetOwnerById(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
 	var owner models.Owner
-	err = collection.FindOne(c.Context(), bson.M{"_id": objectID}).Decode(&owner)
+	err = collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&owner)
 	if err != nil {
-		return c.Status(404).JSON(fiber.Map{"message": "Owner not found"})
+		writeError(w, http.StatusNotFound, "Owner not found")
+		return
 	}
 
 	propertyCollection := config.MongoClient.Database("real-estate").Collection("properties")
-	cursor, err := propertyCollection.Find(c.Context(), bson.M{"owner": objectID})
+	cursor, err := propertyCollection.Find(context.Background(), bson.M{"owner": objectID})
 	if err == nil {
 		var properties []models.Property
-		cursor.All(c.Context(), &properties)
+		cursor.All(context.Background(), &properties)
 		propertyIDs := make([]primitive.ObjectID, len(properties))
 		for i, prop := range properties {
 			propertyIDs[i] = prop.ID
@@ -71,47 +81,52 @@ func GetOwnerById(c *fiber.Ctx) error {
 		owner.Properties = propertyIDs
 	}
 
-	return c.JSON(owner)
+	writeJSON(w, http.StatusOK, owner)
 }
 
-func UpdateOwner(c *fiber.Ctx) error {
-	id := c.Params("id")
+func UpdateOwner(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	var updateData bson.M
-	if err := c.BodyParser(&updateData); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
 	}
 
-	updateData["updatedAt"] = primitive.NewDateTimeFromTime(c.Context().Time())
+	updateData["updatedAt"] = primitive.NewDateTimeFromTime(time.Now())
 
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
 	update := bson.M{"$set": updateData}
-	result := collection.FindOneAndUpdate(c.Context(), bson.M{"_id": objectID}, update, options.FindOneAndUpdate().SetReturnDocument(options.After))
+	result := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objectID}, update, options.FindOneAndUpdate().SetReturnDocument(options.After))
 
 	var owner models.Owner
 	if err := result.Decode(&owner); err != nil {
-		return c.Status(404).JSON(fiber.Map{"message": "Owner not found"})
+		writeError(w, http.StatusNotFound, "Owner not found")
+		return
 	}
 
-	return c.JSON(owner)
+	writeJSON(w, http.StatusOK, owner)
 }
 
-func DeleteOwner(c *fiber.Ctx) error {
-	id := c.Params("id")
+func DeleteOwner(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		return c.Status(400).JSON(fiber.Map{"message": "Invalid ID"})
+		writeError(w, http.StatusBadRequest, "Invalid ID")
+		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
-	result := collection.FindOneAndDelete(c.Context(), bson.M{"_id": objectID})
+	result := collection.FindOneAndDelete(context.Background(), bson.M{"_id": objectID})
 	if result.Err() != nil {
-		return c.Status(404).JSON(fiber.Map{"message": "Owner not found"})
+		writeError(w, http.StatusNotFound, "Owner not found")
+		return
 	}
 
-	return c.JSON(fiber.Map{"message": "Owner deleted"})
+	writeJSON(w, http.StatusOK, map[string]string{"message": "Owner deleted"})
 }
