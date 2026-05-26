@@ -329,3 +329,24 @@ table {
   background: var(--primary-light);
   color: var(--text-primary);
 }
+
+/* Snackbar error style */
+.snack-error .mdc-snackbar__surface {
+  background: #1e1e2e !important;
+  border-left: 4px solid #ef4444 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  min-width: 280px !important;
+}
+
+.snack-error .mdc-snackbar__label {
+  color: #f8fafc !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+}
+
+.snack-error .mat-mdc-snack-bar-action .mdc-button__label {
+  color: #ef4444 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}

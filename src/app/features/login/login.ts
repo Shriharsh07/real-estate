@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -34,7 +36,8 @@ export class Login implements OnInit {
 
   constructor(
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -51,7 +54,12 @@ export class Login implements OnInit {
         this.router.navigate(['/dashboard']);
       },
       error: () => {
-        alert("Invalid credentials");
+        this.snackBar.open('Invalid username or password', 'Dismiss', {
+          duration: 4000,
+          panelClass: ['snack-error'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
       }
     });
   }
