@@ -9,12 +9,12 @@
       }
     },
     {
-      "src": "server-go/main.go",
+      "src": "api/index.go",
       "use": "@vercel/go"
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/server-go/main.go" },
+    { "src": "/api/(.*)", "dest": "/api/index.go" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

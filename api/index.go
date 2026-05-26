@@ -6,12 +6,9 @@ import (
 	"real-estate-api/config"
 	"real-estate-api/handlers"
 	"real-estate-api/middleware"
-
-	"github.com/joho/godotenv"
 )
 
 func init() {
-	godotenv.Load()
 	config.ConnectDB()
 	config.InitCloudinary()
 }
