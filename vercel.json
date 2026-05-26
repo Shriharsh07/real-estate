@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/real-estate-app/browser",
+  "outputDirectory": "dist/real-estate-app",
   "builds": [
     {
       "src": "server-go/main.go",
