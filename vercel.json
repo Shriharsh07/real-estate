@@ -1,16 +1,5 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/real-estate-app",
-  "builds": [
-    {
-      "src": "server-go/main.go",
-      "use": "@vercel/go"
-    }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/server-go/main.go" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "outputDirectory": "dist/real-estate-app"
 }
