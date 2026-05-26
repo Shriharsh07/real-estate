@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,28 +13,33 @@ import (
 
 var MongoClient *mongo.Client
 var MongoCollection *mongo.Collection
+var mongoOnce sync.Once
 
 func ConnectDB() *mongo.Client {
-	mongoURI := os.Getenv("MONGO_URI")
-	if mongoURI == "" {
-		log.Fatal("MONGO_URI environment variable not set")
-	}
+	mongoOnce.Do(func() {
+		mongoURI := os.Getenv("MONGO_URI")
+		if mongoURI == "" {
+			log.Fatal("MONGO_URI environment variable not set")
+		}
 
-	clientOptions := options.Client().ApplyURI(mongoURI)
-	client, err := mongo.Connect(context.Background(), clientOptions)
-	if err != nil {
-		log.Fatal(err)
-	}
+		clientOptions := options.Client().ApplyURI(mongoURI)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+		client, err := mongo.Connect(ctx, clientOptions)
+		if err != nil {
+			log.Fatal("MongoDB connect error:", err)
+		}
 
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+		err = client.Ping(ctx, nil)
+		if err != nil {
+			log.Fatal("MongoDB ping error:", err)
+		}
 
-	log.Println("✅ MongoDB Atlas Connected")
-	MongoClient = client
-	return client
+		log.Println("✅ MongoDB Atlas Connected")
+		MongoClient = client
+	})
+
+	return MongoClient
 }
+	

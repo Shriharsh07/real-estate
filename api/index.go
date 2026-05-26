@@ -2,18 +2,21 @@ package handler
 
 import (
 	"net/http"
+	"sync"
 
 	"real-estate-api/config"
 	"real-estate-api/handlers"
 	"real-estate-api/middleware"
 )
 
-func init() {
-	config.ConnectDB()
-	config.InitCloudinary()
-}
+var initOnce sync.Once
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	initOnce.Do(func() {
+		config.ConnectDB()
+		config.InitCloudinary()
+	})
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
