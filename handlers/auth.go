@@ -22,7 +22,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid request")
+		WriteError(w, http.StatusBadRequest, "Invalid request")
 		return
 	}
 
@@ -31,13 +31,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	err := collection.FindOne(context.Background(), bson.M{"username": body.Username}).Decode(&admin)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid credentials")
+		WriteError(w, http.StatusBadRequest, "Invalid credentials")
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(body.Password))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid credentials")
+		WriteError(w, http.StatusBadRequest, "Invalid credentials")
 		return
 	}
 
@@ -48,9 +48,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, "Error generating token")
+		WriteError(w, http.StatusInternalServerError, "Error generating token")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]string{"token": tokenString})
+	WriteJSON(w, http.StatusOK, map[string]string{"token": tokenString})
 }

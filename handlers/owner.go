@@ -17,7 +17,7 @@ import (
 func CreateOwner(w http.ResponseWriter, r *http.Request) {
 	var owner models.Owner
 	if err := json.NewDecoder(r.Body).Decode(&owner); err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -27,12 +27,12 @@ func CreateOwner(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
 	result, err := collection.InsertOne(context.Background(), owner)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	owner.ID = result.InsertedID.(primitive.ObjectID)
-	writeJSON(w, http.StatusOK, owner)
+	WriteJSON(w, http.StatusOK, owner)
 }
 
 func GetOwners(w http.ResponseWriter, r *http.Request) {
@@ -40,24 +40,24 @@ func GetOwners(w http.ResponseWriter, r *http.Request) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := collection.Find(context.Background(), bson.M{}, opts)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var owners []models.Owner
 	if err = cursor.All(context.Background(), &owners); err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusOK, owners)
+	WriteJSON(w, http.StatusOK, owners)
 }
 
 func GetOwnerById(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
@@ -65,7 +65,7 @@ func GetOwnerById(w http.ResponseWriter, r *http.Request) {
 	var owner models.Owner
 	err = collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&owner)
 	if err != nil {
-		writeError(w, http.StatusNotFound, "Owner not found")
+		WriteError(w, http.StatusNotFound, "Owner not found")
 		return
 	}
 
@@ -81,20 +81,20 @@ func GetOwnerById(w http.ResponseWriter, r *http.Request) {
 		owner.Properties = propertyIDs
 	}
 
-	writeJSON(w, http.StatusOK, owner)
+	WriteJSON(w, http.StatusOK, owner)
 }
 
 func UpdateOwner(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
 	var updateData bson.M
 	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -106,27 +106,27 @@ func UpdateOwner(w http.ResponseWriter, r *http.Request) {
 
 	var owner models.Owner
 	if err := result.Decode(&owner); err != nil {
-		writeError(w, http.StatusNotFound, "Owner not found")
+		WriteError(w, http.StatusNotFound, "Owner not found")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, owner)
+	WriteJSON(w, http.StatusOK, owner)
 }
 
 func DeleteOwner(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/owners/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("owners")
 	result := collection.FindOneAndDelete(context.Background(), bson.M{"_id": objectID})
 	if result.Err() != nil {
-		writeError(w, http.StatusNotFound, "Owner not found")
+		WriteError(w, http.StatusNotFound, "Owner not found")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]string{"message": "Owner deleted"})
+	WriteJSON(w, http.StatusOK, map[string]string{"message": "Owner deleted"})
 }

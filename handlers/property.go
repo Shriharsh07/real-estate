@@ -27,13 +27,13 @@ var validStatusByType = map[string][]string{
 func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	var property models.Property
 	if err := json.NewDecoder(r.Body).Decode(&property); err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	validStatuses, ok := validStatusByType[property.Type]
 	if !ok {
-		writeError(w, http.StatusBadRequest, "Invalid type")
+		WriteError(w, http.StatusBadRequest, "Invalid type")
 		return
 	}
 
@@ -46,7 +46,7 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !statusValid {
-		writeError(w, http.StatusBadRequest, "Invalid status for type")
+		WriteError(w, http.StatusBadRequest, "Invalid status for type")
 		return
 	}
 
@@ -56,12 +56,12 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 	result, err := collection.InsertOne(context.Background(), property)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	property.ID = result.InsertedID.(primitive.ObjectID)
-	writeJSON(w, http.StatusOK, property)
+	WriteJSON(w, http.StatusOK, property)
 }
 
 func GetProperties(w http.ResponseWriter, r *http.Request) {
@@ -99,13 +99,13 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := collection.Find(context.Background(), filter, opts)
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var properties []models.Property
 	if err = cursor.All(context.Background(), &properties); err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -120,14 +120,14 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	writeJSON(w, http.StatusOK, properties)
+	WriteJSON(w, http.StatusOK, properties)
 }
 
 func GetPropertyById(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
@@ -135,24 +135,24 @@ func GetPropertyById(w http.ResponseWriter, r *http.Request) {
 	var property models.Property
 	err = collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&property)
 	if err != nil {
-		writeError(w, http.StatusNotFound, "Property not found")
+		WriteError(w, http.StatusNotFound, "Property not found")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, property)
+	WriteJSON(w, http.StatusOK, property)
 }
 
 func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
 	var updateData bson.M
 	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+		WriteError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -160,7 +160,7 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 		if statusVal, ok := updateData["status"].(string); ok {
 			validStatuses, ok := validStatusByType[typeVal]
 			if !ok {
-				writeError(w, http.StatusBadRequest, "Invalid type")
+				WriteError(w, http.StatusBadRequest, "Invalid type")
 				return
 			}
 
@@ -173,7 +173,7 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if !statusValid {
-				writeError(w, http.StatusBadRequest, "Invalid status for type")
+				WriteError(w, http.StatusBadRequest, "Invalid status for type")
 				return
 			}
 		}
@@ -187,29 +187,29 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 
 	var property models.Property
 	if err := result.Decode(&property); err != nil {
-		writeError(w, http.StatusNotFound, "Property not found")
+		WriteError(w, http.StatusNotFound, "Property not found")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, property)
+	WriteJSON(w, http.StatusOK, property)
 }
 
 func DeleteProperty(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid ID")
+		WriteError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
 	collection := config.MongoClient.Database("real-estate").Collection("properties")
 	_, err = collection.DeleteOne(context.Background(), bson.M{"_id": objectID})
 	if err != nil {
-		writeError(w, http.StatusInternalServerError, err.Error())
+		WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]string{"message": "Property deleted"})
+	WriteJSON(w, http.StatusOK, map[string]string{"message": "Property deleted"})
 }
 
 func GetStats(w http.ResponseWriter, r *http.Request) {
@@ -220,7 +220,7 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 	sold, _ := collection.CountDocuments(context.Background(), bson.M{"status": "sold"})
 	rented, _ := collection.CountDocuments(context.Background(), bson.M{"status": "rented"})
 
-	writeJSON(w, http.StatusOK, map[string]interface{}{
+	WriteJSON(w, http.StatusOK, map[string]interface{}{
 		"total":     total,
 		"available": available,
 		"sold":      sold,
