@@ -197,10 +197,16 @@
   color: #ffffff !important;
   box-shadow: 0 4px 16px rgba(0, 172, 193, 0.30) !important;
   transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+
+  // Key fix: flex on the button's inner label
+  ::ng-deep .mat-mdc-button-touch-target,
+  ::ng-deep .mdc-button__label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
 
   mat-icon {
     font-size: 20px;
@@ -221,12 +227,6 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
-}
-
-.btn-loading {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 ::ng-deep .sign-in-btn .btn-spinner circle {

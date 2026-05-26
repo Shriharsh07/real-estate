@@ -27,26 +27,21 @@
           <mat-form-field appearance="outline" class="field-full">
             <mat-label>Password</mat-label>
             <mat-icon matPrefix class="field-icon">lock</mat-icon>
-            <input matInput [type]="showPassword ? 'text' : 'password'"
-                   [(ngModel)]="password" name="password" required
-                   autocomplete="current-password" />
-            <button mat-icon-button matSuffix type="button"
-                    (click)="showPassword = !showPassword"
-                    class="visibility-btn">
+            <input matInput [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required
+              autocomplete="current-password" />
+            <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword"
+              class="visibility-btn">
               <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
           </mat-form-field>
 
-          <button mat-flat-button type="submit" class="sign-in-btn"
-                  [disabled]="!username || !password || isLoading">
+          <button mat-flat-button type="submit" class="sign-in-btn" [disabled]="!username || !password || isLoading">
             @if (isLoading) {
-              <span class="btn-loading">
-                <mat-spinner diameter="18" strokeWidth="2" class="btn-spinner"></mat-spinner>
-                Signing in...
-              </span>
+            <mat-spinner diameter="18" strokeWidth="2" class="btn-spinner"></mat-spinner>
+            <span>Signing in...</span>
             } @else {
-              <mat-icon>login</mat-icon>
-              Sign In
+            <mat-icon>login</mat-icon>
+            <span>Sign In</span>
             }
           </button>
 
