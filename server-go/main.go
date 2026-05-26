@@ -1,9 +1,7 @@
-package main
+package handler
 
 import (
-	"log"
 	"net/http"
-	"os"
 
 	"real-estate-api/config"
 	"real-estate-api/handlers"
@@ -64,14 +62,4 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 func matchPath(path, prefix string) bool {
 	return len(path) > len(prefix) && path[:len(prefix)] == prefix
-}
-
-func main() {
-	http.HandleFunc("/", Handler)
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
-	log.Printf("Server running on port %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
