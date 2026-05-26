@@ -4,6 +4,8 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { PropertyList } from './features/property-list/property-list';
 import { PropertyFormComponent } from './features/property-form/property-form';
 import { PropertyDetail } from './features/property-detail/property-detail';
+import { OwnerList } from './features/owner-list/owner-list';
+import { OwnerForm } from './features/owner-form/owner-form';
 
 
 export const routes: Routes = [
@@ -13,5 +15,8 @@ export const routes: Routes = [
   { path: 'property-list', component: PropertyList },
   { path: 'property-form', component: PropertyFormComponent },
   { path: 'property-form/:id', component: PropertyFormComponent },
-  { path: 'property/:id', component: PropertyDetail }
+  { path: 'property/:id', component: PropertyDetail },
+  { path: 'owner-list', component: OwnerList },
+  { path: 'owner-form', component: OwnerForm },
+  { path: 'owner-form/:id', component: OwnerForm }
 ];

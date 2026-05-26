@@ -1,0 +1,80 @@
+<div class="owner-list-page">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title">Owners</h1>
+      <p class="page-subtitle">Manage property owners and their contact information</p>
+    </div>
+    <button class="add-btn" routerLink="/owner-form">
+      <mat-icon>add</mat-icon>
+      <span>Add Owner</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="state-card" *ngIf="loading">
+    <mat-icon class="state-icon spin">autorenew</mat-icon>
+    <p>Loading owners…</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="state-card error" *ngIf="error && !loading">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <h3>Failed to load owners</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="loadOwners()">
+      <mat-icon>refresh</mat-icon> Retry
+    </button>
+  </div>
+
+  <!-- Owners Grid -->
+  <div class="owners-grid" *ngIf="owners && owners.length > 0 && !loading && !error">
+    <mat-card class="owner-card" *ngFor="let owner of owners">
+
+      <mat-card-content class="owner-info">
+        <div class="owner-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        
+        <div class="owner-details">
+          <h3 class="owner-name">{{ owner.firstName }} {{ owner.lastName }}</h3>
+          
+          <div class="meta-row">
+            <mat-icon class="meta-icon">phone</mat-icon>
+            <span>{{ owner.contactNumber }}</span>
+          </div>
+          
+          <div class="meta-row" *ngIf="owner.email">
+            <mat-icon class="meta-icon">email</mat-icon>
+            <span>{{ owner.email }}</span>
+          </div>
+
+          <div class="meta-row">
+            <mat-icon class="meta-icon">home_work</mat-icon>
+            <span>{{ owner.properties?.length || 0 }} propert{{ owner.properties?.length === 1 ? 'y' : 'ies' }}</span>
+          </div>
+        </div>
+
+        <div class="owner-actions">
+          <a class="action-btn edit" [routerLink]="['/owner-form', owner._id]">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </a>
+          <button class="action-btn delete" (click)="delete(owner._id)">
+            <mat-icon>delete_outline</mat-icon>
+            <span>Delete</span>
+          </button>
+        </div>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="state-card" *ngIf="!loading && !error && (!owners || owners.length === 0)">
+    <mat-icon class="state-icon">people</mat-icon>
+    <h3>No owners yet</h3>
+  </div>
+
+</div>

@@ -6,14 +6,21 @@
       <h1 class="page-title">Dashboard</h1>
       <p class="page-subtitle">Welcome back, here's your property overview</p>
     </div>
-    <button class="refresh-btn" (click)="loadStats()">
-      <mat-icon>refresh</mat-icon>
-      <span>Refresh</span>
+    <button class="refresh-btn" (click)="loadStats()" [disabled]="isLoading">
+      <mat-icon *ngIf="!isLoading">refresh</mat-icon>
+      <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      <span>{{ isLoading ? 'Loading...' : 'Refresh' }}</span>
     </button>
   </div>
 
+  <!-- Loading State -->
+  <div class="state-card" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading dashboard…</p>
+  </div>
+
   <!-- Stats grid -->
-  <div class="stats-grid">
+  <div class="stats-grid" *ngIf="!isLoading">
 
     <mat-card class="stat-card total">
       <mat-card-content>

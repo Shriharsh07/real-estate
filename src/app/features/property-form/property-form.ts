@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { PropertyService } from '../../core/services/property';
+import { OwnerService } from '../../core/services/owner';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,12 +38,19 @@ export class PropertyFormComponent implements OnInit {
   uploadedImageUrls: string[] = [];
   isUploading = false;
   private filePreviewUrls: Map<File, string> = new Map();
+  owners: any[] = [];
+  isEditMode = false;
+  propertyId: string | null = null;
+  loading = false;
+  error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private propertyService: PropertyService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private ownerService: OwnerService
   ) {}
 
   ngOnInit() {
@@ -61,6 +69,20 @@ export class PropertyFormComponent implements OnInit {
       bedrooms: [null],
       bathrooms: [null],
       totalSqft: [null],
+      owner: [null],
+    });
+
+    // Load owners for dropdown
+    this.loadOwners();
+
+    // Check if we're in edit mode
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.isEditMode = true;
+        this.propertyId = id;
+        this.loadProperty(id);
+      }
     });
 
     // Auto-calculate totalSqft from length × width
@@ -147,12 +169,79 @@ export class PropertyFormComponent implements OnInit {
         this.form.value.images = this.uploadedImageUrls;
       }
 
-      this.propertyService.createProperty(this.form.value).subscribe(() => {
-        this.router.navigate(['/property-list']);
-      });
+      this.loading = true;
+      this.error = null;
+
+      if (this.isEditMode && this.propertyId) {
+        this.propertyService.updateProperty(this.propertyId, this.form.value).subscribe({
+          next: () => {
+            this.router.navigate(['/property-list']);
+          },
+          error: (err) => {
+            this.error = err?.error?.message || 'Failed to update property';
+            this.loading = false;
+          }
+        });
+      } else {
+        this.propertyService.createProperty(this.form.value).subscribe({
+          next: () => {
+            this.router.navigate(['/property-list']);
+          },
+          error: (err) => {
+            this.error = err?.error?.message || 'Failed to create property';
+            this.loading = false;
+          }
+        });
+      }
 
     } catch (err) {
-      alert("Image upload failed");
+      this.error = "Image upload failed";
+      this.loading = false;
     }
+  }
+
+  loadOwners() {
+    this.ownerService.getOwners().subscribe({
+      next: (res: any) => {
+        this.owners = Array.isArray(res) ? res : [res];
+      },
+      error: (err) => {
+        console.error('Error loading owners:', err);
+      }
+    });
+  }
+
+  loadProperty(id: string) {
+    this.loading = true;
+    this.propertyService.getProperty(id).subscribe({
+      next: (res: any) => {
+        this.form.patchValue({
+          propertyName: res.propertyName,
+          description: res.description,
+          location: res.location,
+          pincode: res.pincode,
+          type: res.type,
+          status: res.status,
+          vegPreference: res.vegPreference,
+          price: res.price,
+          length: res.length,
+          width: res.width,
+          bedrooms: res.bedrooms,
+          bathrooms: res.bathrooms,
+          totalSqft: res.totalSqft,
+          owner: res.owner?._id || res.owner,
+        });
+        
+        if (res.images && res.images.length > 0) {
+          this.uploadedImageUrls = res.images;
+        }
+        
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Failed to load property';
+        this.loading = false;
+      }
+    });
   }
 }

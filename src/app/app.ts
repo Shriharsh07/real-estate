@@ -39,7 +39,7 @@ export class App {
     });
     ref.afterClosed().subscribe((confirmed: boolean) => {
       if (!confirmed) return;
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       this.router.navigate(['/login']);
     });
   }

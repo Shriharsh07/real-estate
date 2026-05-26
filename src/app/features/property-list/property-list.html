@@ -6,10 +6,78 @@
       <h1 class="page-title">Properties</h1>
       <p class="page-subtitle">Browse and manage all your listings</p>
     </div>
-    <button class="add-btn" routerLink="/property-form">
-      <mat-icon>add</mat-icon>
-      <span>Add Property</span>
-    </button>
+    <div class="page-header-right">
+      <button class="filter-toggle-btn" (click)="toggleFilters()">
+        <mat-icon>filter_list</mat-icon>
+        <span>Filters</span>
+      </button>
+      <button class="add-btn" routerLink="/property-form">
+        <mat-icon>add</mat-icon>
+        <span>Add Property</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section" *ngIf="showFilters">
+    <form [formGroup]="filterForm" class="filter-form">
+      <div class="filter-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="">All Statuses</mat-option>
+            <mat-option value="for-sale">For Sale</mat-option>
+            <mat-option value="for-rent">For Rent</mat-option>
+            <mat-option value="sold">Sold</mat-option>
+            <mat-option value="rented">Rented</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Property Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value="">All Types</mat-option>
+            <mat-option value="house">House</mat-option>
+            <mat-option value="apartment">Apartment</mat-option>
+            <mat-option value="duplex">Duplex</mat-option>
+            <mat-option value="land">Land</mat-option>
+            <mat-option value="commercial">Commercial</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Owner</mat-label>
+          <mat-select formControlName="owner">
+            <mat-option value="">All Owners</mat-option>
+            <mat-option *ngFor="let owner of owners" [value]="owner._id">
+              {{ owner.firstName }} {{ owner.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Location</mat-label>
+          <input matInput formControlName="location" placeholder="Search by location" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Min Price</mat-label>
+          <input matInput type="number" formControlName="minPrice" placeholder="₹0" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Max Price</mat-label>
+          <input matInput type="number" formControlName="maxPrice" placeholder="₹Max" />
+        </mat-form-field>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="clear-filters-btn" (click)="clearFilters()">
+          <mat-icon>clear_all</mat-icon>
+          <span>Clear Filters</span>
+        </button>
+      </div>
+    </form>
   </div>
 
   <!-- Loading State -->
@@ -53,6 +121,11 @@
           <mat-icon class="meta-icon">home_work</mat-icon>
           <span>{{ p.type }}</span>
         </div>
+        
+        <div class="meta-row" *ngIf="p.owner">
+          <mat-icon class="meta-icon">person</mat-icon>
+          <span>{{ p.owner.firstName }} {{ p.owner.lastName }}</span>
+        </div>
 
         <div class="price-row">
           <span class="price-label">Price</span>
@@ -83,10 +156,6 @@
     <mat-icon class="state-icon">home_work</mat-icon>
     <h3>No properties yet</h3>
     <p>Start by adding your first listing.</p>
-    <button class="add-btn" routerLink="/property-form">
-      <mat-icon>add</mat-icon>
-      <span>Add Property</span>
-    </button>
   </div>
 
 </div>

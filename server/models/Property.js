@@ -34,7 +34,10 @@ const propertySchema = new mongoose.Schema({
     type: String,
     enum: ["veg", "non-veg", "any"],
     default: null
-  }
+  },
+
+  // Owner reference
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'Owner' }
 
 }, { timestamps: true });
 

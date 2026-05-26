@@ -15,40 +15,69 @@ html {
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
   height: 100%;
 }
-// Modern Color Theme
+
+// Modern Color Theme (Based on Reference Design)
 :root {
-  --primary-color: #00acc1;
-  --primary-dark: #00838f;
-  --primary-light: #4dd0e1;
-  --secondary-color: #9c27b0;
-  --accent-color: #ff6f00;
-  --success-color: #4caf50;
-  --warning-color: #ffc107;
-  --danger-color: #f44336;
-  --background-color: #f5f7fa;
+  // Primary Brand Colors (blue-52, blue-53, blue-54)
+  --primary-color: #006DBA;
+  --primary-dark: #025fa1;
+  --primary-light: #008DB9;
+  --primary-mid: #246898;
+  --primary-tint: #dfeff4;
+  
+  // Secondary Colors
+  --secondary-color: #678398;
+  --secondary-dark: #4a5f6f;
+  --secondary-light: #8fa3b5;
+  
+  // Accent Colors
+  --accent-color: #FFA500;
+  --accent-dark: #cc8400;
+  --accent-light: #ffb84d;
+  
+  // Status Colors
+  --success-color: #22c55e;
+  --success-dark: #16a34a;
+  --success-light: #86efac;
+  --warning-color: #FFA500;
+  --warning-dark: #cc8400;
+  --warning-light: #ffb84d;
+  --danger-color: #FF0000;
+  --danger-dark: #cc0000;
+  --danger-light: #ff6666;
+  --info-color: #3b82f6;
+  --info-dark: #2563eb;
+  --info-light: #93c5fd;
+  
+  // Neutral Colors
+  --background-color: #ffffff;
   --surface-color: #ffffff;
-  --text-primary: #212121;
-  --text-secondary: #757575;
-  --border-color: #e0e0e0;
+  --surface-hover: #f1f5f9;
+  --text-primary: #0a0a0a;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --border-color: #e5e5e5;
+  --border-hover: #d4d4d4;
+  
+  // Shadows
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.12);
+  
+  // Gradients
+  --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
+  --gradient-success: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%);
+  --gradient-danger: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-dark) 100%);
 }
 
 html {
@@ -57,12 +86,14 @@ html {
 
 body {
   color-scheme: light;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+  background: var(--background-color);
   color: var(--text-primary);
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", "Segoe UI", system-ui, sans-serif;
   margin: 0;
   height: 100%;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Global Styles */
@@ -72,55 +103,61 @@ body {
 
 /* Card Base Styles */
 mat-card {
-  border-radius: 12px !important;
-  box-shadow: var(--shadow-md) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--shadow-sm) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color) !important;
+  background: var(--surface-color) !important;
 
   &:hover {
     box-shadow: var(--shadow-lg) !important;
     transform: translateY(-2px);
+    border-color: var(--border-hover) !important;
   }
 }
 
 /* Button Styles */
 button[mat-raised-button] {
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: 0.3px !important;
   transition: all 0.3s ease !important;
+  padding: 10px 24px !important;
 
   &[color="primary"] {
-    background: linear-gradient(
-      135deg,
-      var(--primary-color) 0%,
-      var(--primary-dark) 100%
-    ) !important;
+    background: var(--gradient-primary) !important;
     color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3) !important;
 
     &:hover {
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 6px 20px rgba(0, 172, 193, 0.4) !important;
+      transform: translateY(-1px);
     }
   }
 
   &[color="accent"] {
-    background: linear-gradient(
-      135deg,
-      var(--accent-color) 0%,
-      #f57c00 100%
-    ) !important;
+    background: var(--gradient-secondary) !important;
     color: white !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4) !important;
+      transform: translateY(-1px);
+    }
   }
 }
 
 button[mat-stroked-button] {
-  border-radius: 8px !important;
-  border-color: var(--primary-color) !important;
-  color: var(--primary-color) !important;
+  border-radius: 10px !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
 
   &:hover {
-    background-color: rgba(0, 172, 193, 0.05);
+    background-color: var(--surface-hover);
+    border-color: var(--border-hover);
   }
 }
 
@@ -147,7 +184,13 @@ h4,
 h5,
 h6 {
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
 }
 
 h2 {
@@ -155,15 +198,21 @@ h2 {
   margin-bottom: 24px;
 }
 
+h3 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
 /* Input Styles */
 input[matInput],
 select,
 textarea {
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   border: 1px solid var(--border-color) !important;
   padding: 12px 16px !important;
-  font-family: "Roboto", sans-serif !important;
+  font-family: inherit !important;
   transition: all 0.3s ease !important;
+  background: var(--surface-color) !important;
 
   &:focus {
     border-color: var(--primary-color) !important;
@@ -175,17 +224,14 @@ textarea {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
+  background: var(--surface-color);
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
 
   thead {
-    background: linear-gradient(
-      135deg,
-      var(--primary-color) 0%,
-      var(--primary-dark) 100%
-    );
+    background: var(--gradient-primary);
     color: white;
   }
 
@@ -193,11 +239,15 @@ table {
     padding: 16px;
     font-weight: 600;
     text-align: left;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   td {
     padding: 16px;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
   }
 
   tr:last-child td {
@@ -205,13 +255,13 @@ table {
   }
 
   tbody tr:hover {
-    background-color: rgba(0, 172, 193, 0.04);
+    background-color: var(--surface-hover);
   }
 }
 
 /* Container Styles */
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
 }
@@ -252,4 +302,30 @@ table {
 
 .gap-24 {
   gap: 24px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-hover);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-tertiary);
+  border-radius: 10px;
+  
+  &:hover {
+    background: var(--text-secondary);
+  }
+}
+
+/* Selection */
+::selection {
+  background: var(--primary-light);
+  color: var(--text-primary);
 }

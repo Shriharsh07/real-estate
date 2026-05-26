@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef  } from "@angular/core";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 import { PropertyService } from "../../core/services/property";
 import { CommonModule } from "@angular/common";
@@ -9,7 +10,7 @@ import { CommonModule } from "@angular/common";
 @Component({
   selector: "app-dashboard",
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss",
 })
@@ -47,6 +48,7 @@ export class Dashboard implements OnInit {
           rented: res?.rented ?? 0,
         };
 
+        this.isLoading = false;
         this.cdr.detectChanges(); // 🔥 force UI update
       },
       error: (err) => {
@@ -61,6 +63,7 @@ export class Dashboard implements OnInit {
         };
 
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

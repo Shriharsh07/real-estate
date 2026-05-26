@@ -39,7 +39,7 @@ export class Login implements OnInit {
 
   ngOnInit() {
     // Check if already logged in
-    if (localStorage.getItem('token')) {
+    if (sessionStorage.getItem('token')) {
       this.router.navigate(['/dashboard']);
     }
   }
@@ -47,7 +47,7 @@ export class Login implements OnInit {
   login() {
     this.auth.login(this.username, this.password).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res.token);
+        sessionStorage.setItem('token', res.token);
         this.router.navigate(['/dashboard']);
       },
       error: () => {
