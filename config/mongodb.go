@@ -11,6 +11,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const (
+	DatabaseName         = "realestate"
+	CollectionAdmins     = "admins"
+	CollectionProperties = "properties"
+	CollectionOwners     = "owners"
+)
+
 var MongoClient *mongo.Client
 var MongoCollection *mongo.Collection
 var mongoOnce sync.Once
@@ -42,4 +49,3 @@ func ConnectDB() *mongo.Client {
 
 	return MongoClient
 }
-	

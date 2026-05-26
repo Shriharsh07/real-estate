@@ -30,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	collection := config.MongoClient.Database("real-estate").Collection("admins")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionAdmins)
 
 	var existingAdmin models.Admin
 	err = collection.FindOne(context.Background(), bson.M{"username": username}).Decode(&existingAdmin)

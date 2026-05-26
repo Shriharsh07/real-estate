@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"os"
 	"sync"
 
 	"real-estate-api/config"
@@ -56,13 +55,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		middleware.AuthMiddleware(handlers.DeleteOwner)(w, r)
 	case path == "/api/upload" && r.Method == "POST":
 		middleware.AuthMiddleware(handlers.UploadImages)(w, r)
-	case path == "/api/debug" && r.Method == "GET":
-		debug := map[string]interface{}{
-			"mongo_uri_set":    os.Getenv("MONGO_URI") != "",
-			"jwt_secret_set":   os.Getenv("JWT_SECRET") != "",
-			"mongo_client_nil": config.MongoClient == nil,
-		}
-		handlers.WriteJSON(w, http.StatusOK, debug)
 	default:
 		http.NotFound(w, r)
 	}

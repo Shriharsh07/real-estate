@@ -33,6 +33,7 @@ export class Login implements OnInit {
   username = '';
   password = '';
   showPassword = false;
+  isLoading = false;
 
   constructor(
     private auth: Auth,
@@ -48,12 +49,21 @@ export class Login implements OnInit {
   }
 
   login() {
+    this.isLoading = true;
     this.auth.login(this.username, this.password).subscribe({
       next: (res: any) => {
+        this.isLoading = false;
         sessionStorage.setItem('token', res.token);
-        this.router.navigate(['/dashboard']);
+        const ref = this.snackBar.open(res.message ?? 'Login successful', '', {
+          duration: 2000,
+          panelClass: ['snack-success'],
+          horizontalPosition: 'center',
+          verticalPosition: 'top'
+        });
+        ref.afterDismissed().subscribe(() => this.router.navigate(['/dashboard']));
       },
       error: () => {
+        this.isLoading = false;
         this.snackBar.open('Invalid username or password', 'Dismiss', {
           duration: 4000,
           panelClass: ['snack-error'],

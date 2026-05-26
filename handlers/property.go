@@ -27,13 +27,13 @@ var validStatusByType = map[string][]string{
 func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	var property models.Property
 	if err := json.NewDecoder(r.Body).Decode(&property); err != nil {
-		WriteError(w, http.StatusBadRequest, err.Error())
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	validStatuses, ok := validStatusByType[property.Type]
 	if !ok {
-		WriteError(w, http.StatusBadRequest, "Invalid type")
+		writeError(w, http.StatusBadRequest, "Invalid type")
 		return
 	}
 
@@ -46,26 +46,26 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !statusValid {
-		WriteError(w, http.StatusBadRequest, "Invalid status for type")
+		writeError(w, http.StatusBadRequest, "Invalid status for type")
 		return
 	}
 
 	property.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	property.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
 
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 	result, err := collection.InsertOne(context.Background(), property)
 	if err != nil {
-		WriteError(w, http.StatusInternalServerError, err.Error())
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	property.ID = result.InsertedID.(primitive.ObjectID)
-	WriteJSON(w, http.StatusOK, property)
+	writeJSON(w, http.StatusOK, property)
 }
 
 func GetProperties(w http.ResponseWriter, r *http.Request) {
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 
 	filter := bson.M{}
 
@@ -99,19 +99,19 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := collection.Find(context.Background(), filter, opts)
 	if err != nil {
-		WriteError(w, http.StatusInternalServerError, err.Error())
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	var properties []models.Property
 	if err = cursor.All(context.Background(), &properties); err != nil {
-		WriteError(w, http.StatusInternalServerError, err.Error())
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	for i := range properties {
 		if properties[i].Owner != nil {
-			ownerCollection := config.MongoClient.Database("real-estate").Collection("owners")
+			ownerCollection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionOwners)
 			var owner models.Owner
 			err := ownerCollection.FindOne(context.Background(), bson.M{"_id": *properties[i].Owner}).Decode(&owner)
 			if err == nil {
@@ -120,39 +120,39 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	WriteJSON(w, http.StatusOK, properties)
+	writeJSON(w, http.StatusOK, properties)
 }
 
 func GetPropertyById(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		WriteError(w, http.StatusBadRequest, "Invalid ID")
+		writeError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 	var property models.Property
 	err = collection.FindOne(context.Background(), bson.M{"_id": objectID}).Decode(&property)
 	if err != nil {
-		WriteError(w, http.StatusNotFound, "Property not found")
+		writeError(w, http.StatusNotFound, "Property not found")
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, property)
+	writeJSON(w, http.StatusOK, property)
 }
 
 func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		WriteError(w, http.StatusBadRequest, "Invalid ID")
+		writeError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
 	var updateData bson.M
 	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
-		WriteError(w, http.StatusBadRequest, err.Error())
+		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -160,7 +160,7 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 		if statusVal, ok := updateData["status"].(string); ok {
 			validStatuses, ok := validStatusByType[typeVal]
 			if !ok {
-				WriteError(w, http.StatusBadRequest, "Invalid type")
+				writeError(w, http.StatusBadRequest, "Invalid type")
 				return
 			}
 
@@ -173,7 +173,7 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if !statusValid {
-				WriteError(w, http.StatusBadRequest, "Invalid status for type")
+				writeError(w, http.StatusBadRequest, "Invalid status for type")
 				return
 			}
 		}
@@ -181,46 +181,46 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 
 	updateData["updatedAt"] = primitive.NewDateTimeFromTime(time.Now())
 
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 	update := bson.M{"$set": updateData}
 	result := collection.FindOneAndUpdate(context.Background(), bson.M{"_id": objectID}, update, options.FindOneAndUpdate().SetReturnDocument(options.After))
 
 	var property models.Property
 	if err := result.Decode(&property); err != nil {
-		WriteError(w, http.StatusNotFound, "Property not found")
+		writeError(w, http.StatusNotFound, "Property not found")
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, property)
+	writeJSON(w, http.StatusOK, property)
 }
 
 func DeleteProperty(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/api/properties/"):]
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
-		WriteError(w, http.StatusBadRequest, "Invalid ID")
+		writeError(w, http.StatusBadRequest, "Invalid ID")
 		return
 	}
 
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 	_, err = collection.DeleteOne(context.Background(), bson.M{"_id": objectID})
 	if err != nil {
-		WriteError(w, http.StatusInternalServerError, err.Error())
+		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, map[string]string{"message": "Property deleted"})
+	writeJSON(w, http.StatusOK, map[string]string{"message": "Property deleted"})
 }
 
 func GetStats(w http.ResponseWriter, r *http.Request) {
-	collection := config.MongoClient.Database("real-estate").Collection("properties")
+	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 
 	total, _ := collection.CountDocuments(context.Background(), bson.M{})
 	available, _ := collection.CountDocuments(context.Background(), bson.M{"status": "available"})
 	sold, _ := collection.CountDocuments(context.Background(), bson.M{"status": "sold"})
 	rented, _ := collection.CountDocuments(context.Background(), bson.M{"status": "rented"})
 
-	WriteJSON(w, http.StatusOK, map[string]interface{}{
+	writeJSON(w, http.StatusOK, map[string]interface{}{
 		"total":     total,
 		"available": available,
 		"sold":      sold,
