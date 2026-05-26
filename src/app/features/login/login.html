@@ -39,15 +39,13 @@
 
           <button mat-flat-button type="submit" class="sign-in-btn"
                   [disabled]="!username || !password || isLoading">
-            <span class="btn-content">
-              @if (isLoading) {
-                <span class="btn-spinner"></span>
-                Signing in...
-              } @else {
-                <mat-icon>login</mat-icon>
-                Sign In
-              }
-            </span>
+            @if (isLoading) {
+              <mat-spinner diameter="18" strokeWidth="2" class="btn-spinner"></mat-spinner>
+              Signing in...
+            } @else {
+              <mat-icon>login</mat-icon>
+              Sign In
+            }
           </button>
 
         </form>
