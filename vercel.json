@@ -7,12 +7,13 @@
       "config": {
         "distDir": "dist/real-estate-app/browser"
       }
-    },
-    {
-      "src": "api/index.go",
-      "use": "@vercel/go"
     }
   ],
+  "functions": {
+    "api/index.go": {
+      "runtime": "vercel-go@3.1.2"
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.go" },
     { "handle": "filesystem" },
