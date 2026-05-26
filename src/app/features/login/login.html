@@ -40,8 +40,10 @@
           <button mat-flat-button type="submit" class="sign-in-btn"
                   [disabled]="!username || !password || isLoading">
             @if (isLoading) {
-              <mat-spinner diameter="18" strokeWidth="2" class="btn-spinner"></mat-spinner>
-              Signing in...
+              <span class="btn-loading">
+                <mat-spinner diameter="18" strokeWidth="2" class="btn-spinner"></mat-spinner>
+                Signing in...
+              </span>
             } @else {
               <mat-icon>login</mat-icon>
               Sign In
