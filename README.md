@@ -3,12 +3,12 @@
 > 🤖 *Built with AI-assisted development using [Windsurf](https://windsurf.com)*
 
 ![Angular](https://img.shields.io/badge/Angular_21-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Built with AI](https://img.shields.io/badge/Built%20with-AI%20%28Windsurf%29-blueviolet?style=for-the-badge&logo=openai&logoColor=white)
 
-A full-stack admin dashboard for managing real estate properties and owners — built with **Angular 21** on the frontend and **Node.js + Express + MongoDB** on the backend, deployed on **Vercel**.
+A full-stack admin dashboard for managing real estate properties and owners — built with **Angular 21** on the frontend and **Go + MongoDB** on the backend, deployed on **Vercel**.
 
 ---
 
@@ -19,7 +19,7 @@ A full-stack admin dashboard for managing real estate properties and owners — 
 - 🔍 **Advanced Filtering** — Filter properties by type, status, location (regex), owner, and price range
 - 👤 **Owner Management** — Add and manage property owners linked to their listings
 - 📊 **Dashboard Stats** — Live counts of total, available, sold, and rented properties
-- 🖼️ **Image Uploads** — Cloudinary integration via Multer for property photo management
+- 🖼️ **Image Uploads** — Cloudinary integration for property photo management (up to 5 images per upload)
 - 📱 **Material UI** — Angular Material components for a clean, responsive interface
 - ☁️ **Vercel Deployment** — Frontend (Angular) + serverless API deployed together on Vercel
 
@@ -30,11 +30,11 @@ A full-stack admin dashboard for managing real estate properties and owners — 
 | Layer | Technology |
 |---|---|
 | Frontend | Angular 21, Angular Material, RxJS |
-| Backend | Node.js, Express 5 |
-| Database | MongoDB Atlas, Mongoose |
-| Auth | JWT, bcryptjs |
-| File Uploads | Multer, Cloudinary |
-| Deployment | Vercel |
+| Backend | Go 1.21, net/http |
+| Database | MongoDB Atlas, Go MongoDB Driver |
+| Auth | golang-jwt/jwt v5, bcrypt (x/crypto) |
+| File Uploads | Cloudinary Go SDK v2 |
+| Deployment | Vercel (static + Go serverless) |
 
 ---
 
@@ -52,14 +52,16 @@ real-estate-app/
 │           ├── property-detail/
 │           ├── owner-list/     # List owners
 │           └── owner-form/     # Add / edit owner
-├── server/                     # Node.js backend
-│   ├── controllers/            # Route handlers
-│   ├── models/                 # Mongoose schemas
-│   ├── routes/                 # Express routers
-│   ├── middleware/             # Auth & upload middleware
-│   └── config/                 # Cloudinary config
+├── handlers/                   # Go HTTP handler functions
+├── models/                     # MongoDB document models
+├── middleware/                 # JWT auth middleware
+├── config/                     # MongoDB & Cloudinary config
+├── cmd/
+│   └── seed/
+│       └── main.go             # Admin user seeding script
 ├── api/
-│   └── index.js                # Vercel serverless entry
+│   └── index.go                # Vercel Go serverless entry
+├── go.mod
 └── vercel.json                 # Vercel deployment config
 ```
 
@@ -100,6 +102,7 @@ real-estate-app/
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Go 1.21+
 - Node.js ≥ 18
 - MongoDB Atlas URI
 - Cloudinary account
@@ -113,47 +116,44 @@ cd real-estate-app
 # Install frontend dependencies
 npm install
 
-# Install backend dependencies
-cd server && npm install
+# Install Go backend dependencies
+go mod download
 ```
 
 ### 2. Configure environment
 
-Create `server/.env`:
+Copy `.env.example` to `.env` and fill in your values:
 
 ```env
 MONGO_URI=your_mongodb_atlas_uri
 JWT_SECRET=your_jwt_secret
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+CLOUD_NAME=your_cloudinary_cloud_name
+API_KEY=your_cloudinary_api_key
+API_SECRET=your_cloudinary_api_secret
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
 ```
 
 ### 3. Seed the admin user
 
 ```bash
-cd server
-node seedAdmin.js
+go run cmd/seed/main.go
 ```
 
 ### 4. Run locally
 
 ```bash
-# Terminal 1 — Backend
-cd server
-npm run dev
-
-# Terminal 2 — Frontend
+# Terminal 1 — Frontend
 npm start
 ```
 
-Frontend runs at `http://localhost:4200`, backend at `http://localhost:5000`.
+Frontend runs at `http://localhost:4200`. API routes are proxied to the Go serverless function on Vercel in production.
 
 ---
 
 ## 📦 Deployment
 
-Deployed on **Vercel** — the Angular build is served as static files and the Express backend runs as a serverless function via `api/index.js`.
+Deployed on **Vercel** — the Angular build is served as static files and the Go backend runs as a serverless function via `api/index.go` using the `@vercel/go` runtime.
 
 ```bash
 vercel --prod

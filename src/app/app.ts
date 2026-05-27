@@ -16,13 +16,23 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog';
 export class App {
   protected readonly title = signal('real-estate-app');
   isLoginPage = false;
+  mobileMenuOpen = false;
 
   constructor(private router: Router, private dialog: MatDialog) {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.isLoginPage = event.urlAfterRedirects === '/login';
+        this.mobileMenuOpen = false;
       });
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.mobileMenuOpen = false;
   }
 
   logout() {

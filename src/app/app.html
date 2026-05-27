@@ -5,27 +5,46 @@
     <div class="navbar">
 
       <!-- Brand -->
-      <a routerLink="/dashboard" class="navbar-brand">
+      <a routerLink="/dashboard" class="navbar-brand" (click)="closeMobileMenu()">
         <div class="brand-icon-wrap">
           <mat-icon class="brand-mat-icon">apartment</mat-icon>
         </div>
         <span class="brand-name">EstateHub</span>
       </a>
 
+      <!-- Mobile menu toggle -->
+      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
+        <mat-icon *ngIf="!mobileMenuOpen">menu</mat-icon>
+        <mat-icon *ngIf="mobileMenuOpen">close</mat-icon>
+      </button>
+
       <!-- Nav links -->
-      <nav class="navbar-nav">
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+      <nav class="navbar-nav" [class.mobile-open]="mobileMenuOpen">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
           <mat-icon>dashboard</mat-icon>
           <span>Dashboard</span>
         </a>
-        <a routerLink="/property-list" routerLinkActive="active" class="nav-link">
+        <a routerLink="/property-list" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
           <mat-icon>home_work</mat-icon>
           <span>Properties</span>
         </a>
-        <a routerLink="/owner-list" routerLinkActive="active" class="nav-link">
+        <a routerLink="/owner-list" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
           <mat-icon>people</mat-icon>
           <span>Owners</span>
         </a>
+
+        <!-- Mobile-only user actions -->
+        <div class="mobile-nav-divider"></div>
+        <div class="mobile-user-section">
+          <div class="user-chip">
+            <mat-icon class="user-icon">account_circle</mat-icon>
+            <span class="user-label">Admin</span>
+          </div>
+          <button class="logout-btn mobile-logout" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </div>
       </nav>
 
       <!-- Right side -->
