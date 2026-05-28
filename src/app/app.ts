@@ -17,6 +17,7 @@ import { APP_VERSION } from '../environments/version';
 export class App {
   protected readonly title = signal('real-estate-app');
   appVersion = APP_VERSION;
+  currentYear = new Date().getFullYear();
   isLoginPage = false;
   mobileMenuOpen = false;
 

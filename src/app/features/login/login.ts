@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Auth } from '../../core/services/auth';
 import { Router } from '@angular/router';
+import { APP_VERSION } from '../../../environments/version';
 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -32,6 +33,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class Login implements OnInit {
 
+  appVersion = APP_VERSION;
+  currentYear = new Date().getFullYear();
   username = '';
   password = '';
   showPassword = false;
