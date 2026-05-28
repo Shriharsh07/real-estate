@@ -1,14 +1,23 @@
 .owner-list-page {
-  padding: 32px;
   max-width: 1600px;
   margin: 0 auto;
-
-  @media (max-width: 1024px) {
-    padding: 28px 24px;
+  padding: 24px 16px;
+  
+  // Responsive spacing
+  @media (min-width: 425px) {
+    padding: 28px 20px;
   }
-
-  @media (max-width: 768px) {
-    padding: 20px 16px;
+  
+  @media (min-width: 640px) {
+    padding: 32px 24px;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 32px 28px;
+  }
+  
+  @media (min-width: 1280px) {
+    padding: 36px 32px;
   }
 }
 
@@ -16,22 +25,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 16px;
-
+  
+  // Responsive spacing
+  @media (min-width: 640px) {
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  
+  @media (min-width: 1024px) {
+    margin-bottom: 32px;
+  }
+  
   .page-header-left {
     .page-title {
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 700;
       color: #0f172a;
       margin: 0 0 4px 0;
+      
+      // Responsive typography
+      @media (min-width: 425px) {
+        font-size: 24px;
+      }
+      
+      @media (min-width: 640px) {
+        font-size: 26px;
+      }
+      
+      @media (min-width: 1024px) {
+        font-size: 28px;
+      }
     }
 
     .page-subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: #64748b;
       margin: 0;
+      
+      @media (min-width: 640px) {
+        font-size: 13.5px;
+      }
+      
+      @media (min-width: 1024px) {
+        font-size: 14px;
+      }
     }
   }
 
@@ -49,16 +89,38 @@
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
+    
+    // Responsive button sizing
+    @media (max-width: 640px) {
+      padding: 12px 24px;
+      font-size: 15px;
+      border-radius: 10px;
+    }
+    
+    @media (min-width: 1024px) {
+      padding: 12px 24px;
+      font-size: 15px;
+    }
 
     mat-icon {
       font-size: 18px;
       width: 18px;
       height: 18px;
+      
+      @media (max-width: 640px) {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
     }
 
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 172, 193, 0.3);
       transform: translateY(-1px);
+    }
+    
+    &:active {
+      transform: translateY(0) scale(0.96);
     }
   }
 }
@@ -132,20 +194,66 @@
 
 .owners-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 24px;
+  gap: 20px;
+  
+  // Mobile-first: Single column
+  grid-template-columns: 1fr;
+  
+  // Small tablets (425px+)
+  @media (min-width: 425px) {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  
+  // Tablets (640px+)
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  // Large tablets (768px+)
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  
+  // Small desktop (1024px+)
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  // Large desktop (1280px+)
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
 }
 
 .owner-card {
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.07);
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
   overflow: hidden;
-
+  background: #fff;
+  
   &:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    
+    .owner-avatar {
+      transform: scale(1.05);
+    }
+    
+    .action-btn {
+      transform: translateY(-2px);
+    }
+  }
+  
+  // Better mobile touch feedback
+  &:active {
+    transform: translateY(-2px) scale(0.98);
   }
 }
 
@@ -153,6 +261,17 @@
   display: flex;
   gap: 16px;
   padding: 20px;
+  
+  // Responsive layout
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+  }
+  
+  @media (min-width: 641px) {
+    align-items: flex-start;
+  }
 }
 
 .owner-avatar {
@@ -164,27 +283,75 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+  
+  // Responsive avatar size
+  @media (max-width: 640px) {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 1024px) {
+    width: 60px;
+    height: 60px;
+  }
 
   mat-icon {
     color: white;
     font-size: 28px;
     width: 28px;
     height: 28px;
+    transition: transform 0.2s ease;
+    
+    @media (max-width: 640px) {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+    
+    @media (min-width: 1024px) {
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
+    }
   }
 }
 
 .owner-details {
   flex: 1;
   min-width: 0;
+  
+  // Mobile center alignment
+  @media (max-width: 640px) {
+    text-align: center;
+  }
 
   .owner-name {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: #0f172a;
     margin: 0 0 12px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.3;
+    
+    // Responsive font size and truncation
+    @media (max-width: 640px) {
+      font-size: 17px;
+      margin-bottom: 14px;
+      // Allow 2 lines on mobile
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    @media (min-width: 641px) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 16px;
+    }
   }
 
   .meta-row {
@@ -193,68 +360,173 @@
     gap: 8px;
     font-size: 13px;
     color: #64748b;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    
+    // Responsive layout and sizing
+    @media (max-width: 640px) {
+      justify-content: center;
+      font-size: 12px;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
 
     .meta-icon {
       font-size: 16px;
       width: 16px;
       height: 16px;
       color: #94a3b8;
+      flex-shrink: 0;
+      
+      @media (max-width: 640px) {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
     }
 
     span {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: 0;
+      
+      @media (max-width: 640px) {
+        // Allow text wrapping on mobile for very long emails
+        &:has(+ .meta-icon[maticon="email"]) {
+          white-space: normal;
+          word-break: break-word;
+          text-align: center;
+          line-height: 1.4;
+        }
+      }
     }
   }
 }
 
 .owner-actions {
   display: flex;
-  flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
+  
+  // Responsive action layout
+  @media (max-width: 640px) {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  
+  @media (min-width: 641px) {
+    flex-direction: column;
+    gap: 8px;
+  }
 
   .action-btn {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
-    border: none;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+    
+    // Touch-friendly sizing on mobile
+    @media (max-width: 640px) {
+      height: 44px;
+      padding: 12px 20px;
+      font-size: 14px;
+      border-radius: 10px;
+      min-width: 100px;
+      justify-content: center;
+      
+      // Minimum touch target
+      min-height: 44px;
+    }
+    
+    @media (min-width: 641px) {
+      height: 36px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    
+    // Active state for mobile feedback
+    &:active {
+      transform: scale(0.96);
+    }
+    
+    // Enhanced hover states
+    &:hover {
+      mat-icon {
+        transform: scale(1.1);
+      }
+    }
 
     mat-icon {
       font-size: 16px;
       width: 16px;
       height: 16px;
+      transition: transform 0.2s ease;
+      
+      @media (max-width: 640px) {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
     }
 
     &.edit {
       background: #eff6ff;
       color: #0284c7;
+      border-color: #bfdbfe;
 
       &:hover {
         background: #dbeafe;
+        border-color: #93c5fd;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+      }
+      
+      @media (max-width: 640px) {
+        background: #eff6ff;
+        color: #0284c7;
+        border-color: #bfdbfe;
+        
+        &:hover {
+          background: #dbeafe;
+        }
       }
     }
 
     &.delete {
       background: #fef2f2;
       color: #ef4444;
+      border-color: #fecaca;
 
       &:hover {
         background: #fee2e2;
+        border-color: #fca5a5;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+      }
+      
+      @media (max-width: 640px) {
+        background: #fef2f2;
+        color: #ef4444;
+        border-color: #fecaca;
+        
+        &:hover {
+          background: #fee2e2;
+        }
       }
     }
   }
 }
 
+// ── Responsive page header and layout ─────────────────────────────────────
 @media (max-width: 768px) {
   .owner-list-page {
     padding: 20px 16px;
@@ -262,15 +534,65 @@
 
   .owners-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .page-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 16px;
+
+    .page-header-left {
+      width: 100%;
+    }
 
     .add-btn {
       width: 100%;
       justify-content: center;
+      height: 48px;
+      font-size: 15px;
+      border-radius: 12px;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+// ── Small mobile optimizations (425px and below) ───────────────────────────────
+@media (max-width: 425px) {
+  .owner-list-page {
+    padding: 16px 12px;
+  }
+  
+  .page-header {
+    margin-bottom: 20px;
+    
+    .page-title {
+      font-size: 24px;
+    }
+    
+    .page-subtitle {
+      font-size: 13px;
+    }
+  }
+  
+  .owner-info {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .owner-actions {
+    margin-top: 12px;
+    gap: 8px;
+    
+    .action-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+      min-width: 80px;
     }
   }
 }

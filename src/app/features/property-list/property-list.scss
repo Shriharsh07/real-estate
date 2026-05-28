@@ -2,17 +2,28 @@
   display: block;
 }
 
+// ── Responsive typography system ───────────────────────────────────────────
+// Mobile-first approach with fluid typography
 .property-list-page {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 32px 28px;
-
-  @media (max-width: 1024px) {
-    padding: 28px 24px;
+  padding: 24px 16px;
+  
+  // Responsive spacing
+  @media (min-width: 425px) {
+    padding: 28px 20px;
   }
-
-  @media (max-width: 768px) {
-    padding: 20px 16px;
+  
+  @media (min-width: 640px) {
+    padding: 32px 24px;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 32px 28px;
+  }
+  
+  @media (min-width: 1280px) {
+    padding: 36px 32px;
   }
 }
 
@@ -21,9 +32,19 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   gap: 16px;
   flex-wrap: wrap;
+  
+  // Responsive spacing
+  @media (min-width: 640px) {
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  
+  @media (min-width: 1024px) {
+    margin-bottom: 32px;
+  }
 
   .page-header-left {
     flex: 1;
@@ -33,20 +54,46 @@
     display: flex;
     gap: 12px;
     align-items: center;
+    
+    @media (max-width: 640px) {
+      width: 100%;
+      justify-content: space-between;
+    }
   }
 
   .page-title {
     margin: 0 0 4px;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 700;
     color: #0f172a;
     letter-spacing: -0.5px;
+    
+    // Responsive typography
+    @media (min-width: 425px) {
+      font-size: 24px;
+    }
+    
+    @media (min-width: 640px) {
+      font-size: 26px;
+    }
+    
+    @media (min-width: 1024px) {
+      font-size: 28px;
+    }
   }
 
   .page-subtitle {
     margin: 0;
-    font-size: 13.5px;
+    font-size: 13px;
     color: #64748b;
+    
+    @media (min-width: 640px) {
+      font-size: 13.5px;
+    }
+    
+    @media (min-width: 1024px) {
+      font-size: 14px;
+    }
   }
 }
 
@@ -402,22 +449,39 @@
 // ── Properties grid ───────────────────────────────────────────────────────────
 .properties-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  
+  // Mobile-first: Single column
+  grid-template-columns: 1fr;
+  
+  // Small tablets (425px+)
+  @media (min-width: 425px) {
+    grid-template-columns: 1fr;
     gap: 16px;
   }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px;
+  
+  // Tablets (640px+)
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  
+  // Large tablets (768px+)
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  
+  // Small desktop (1024px+)
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  // Large desktop (1280px+)
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
   }
 }
 
@@ -431,7 +495,8 @@
   display: flex !important;
   flex-direction: column;
   cursor: pointer;
-
+  
+  // Enhanced hover effects
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 28px rgba(0,0,0,0.12) !important;
@@ -439,16 +504,36 @@
     .property-image img {
       transform: scale(1.04);
     }
+    
+    .property-actions .action-btn {
+      transform: translateY(-2px);
+    }
+  }
+  
+  // Mobile touch feedback
+  @media (max-width: 640px) {
+    &:active {
+      transform: translateY(-2px) scale(0.98);
+    }
   }
 }
 
 // ── Image block ───────────────────────────────────────────────────────────────
 .property-image {
   position: relative;
-  height: 170px;
+  height: 200px;
   overflow: hidden;
   background: #f1f5f9;
   flex-shrink: 0;
+  
+  // Responsive image height
+  @media (min-width: 640px) {
+    height: 180px;
+  }
+  
+  @media (min-width: 1024px) {
+    height: 170px;
+  }
 
   img {
     width: 100%;
@@ -470,6 +555,12 @@
       width: 44px;
       height: 44px;
       color: #bae6fd;
+      
+      @media (min-width: 640px) {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 
@@ -477,7 +568,7 @@
     position: absolute;
     top: 12px;
     right: 12px;
-    padding: 4px 11px;
+    padding: 5px 12px;
     border-radius: 999px;
     font-size: 11px;
     font-weight: 700;
@@ -486,6 +577,14 @@
     backdrop-filter: blur(6px);
     background: rgba(255,255,255,0.92);
     box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    
+    // Smaller badge on mobile
+    @media (max-width: 640px) {
+      padding: 4px 10px;
+      font-size: 10px;
+      top: 8px;
+      right: 8px;
+    }
 
     &.badge-for-sale  { color: #22c55e; border: 1px solid #bbf7d0; }
     &.badge-for-rent  { color: #3b82f6; border: 1px solid #bfdbfe; }
@@ -496,22 +595,45 @@
 
 // ── Info block ────────────────────────────────────────────────────────────────
 .property-info {
-  padding: 18px 18px 16px !important;
+  padding: 20px !important;
   display: flex;
   flex-direction: column;
   gap: 0;
   flex: 1;
+  
+  // Responsive padding
+  @media (min-width: 640px) {
+    padding: 18px 18px 16px !important;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 18px 18px 16px !important;
+  }
 }
 
 .property-title {
-  margin: 0 0 10px;
-  font-size: 16px;
+  margin: 0 0 12px;
+  font-size: 18px;
   font-weight: 700;
   color: #0f172a;
   line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  
+  // Allow 2 lines on mobile, 1 line on desktop
+  @media (max-width: 640px) {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 17px;
+  }
+  
+  @media (min-width: 641px) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+  }
 }
 
 .meta-row {
@@ -520,7 +642,14 @@
   gap: 6px;
   font-size: 13px;
   color: #64748b;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  
+  // Responsive font sizes
+  @media (max-width: 640px) {
+    font-size: 12px;
+    margin-bottom: 8px;
+    gap: 5px;
+  }
 
   .meta-icon {
     font-size: 15px;
@@ -528,6 +657,31 @@
     height: 15px;
     color: #94a3b8;
     flex-shrink: 0;
+    
+    @media (max-width: 640px) {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+  
+  span {
+    // Text truncation for long content
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    
+    @media (max-width: 640px) {
+      // Allow 2 lines on mobile for location
+      &:has(+ .meta-icon[maticon="location_on"]) {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        white-space: normal;
+      }
+    }
   }
 }
 
@@ -535,10 +689,15 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 12px 0 14px;
-  padding: 10px 0;
+  margin: 14px 0 16px;
+  padding: 12px 0;
   border-top: 1px solid #f1f5f9;
   border-bottom: 1px solid #f1f5f9;
+  
+  @media (max-width: 640px) {
+    margin: 12px 0 14px;
+    padding: 10px 0;
+  }
 
   .price-label {
     font-size: 11.5px;
@@ -546,6 +705,10 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     color: #94a3b8;
+    
+    @media (max-width: 640px) {
+      font-size: 11px;
+    }
   }
 
   .price-value {
@@ -553,35 +716,113 @@
     font-weight: 700;
     color: #0284c7;
     letter-spacing: -0.4px;
+    
+    @media (max-width: 640px) {
+      font-size: 16px;
+    }
+    
+    // Handle overflow for very long prices
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+    
+    @media (min-width: 640px) {
+      max-width: 70%;
+    }
   }
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 .property-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   gap: 8px;
   margin-top: auto;
+  
+  // Responsive button layout
+  @media (max-width: 640px) {
+    // Stack vertically on mobile
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  @media (min-width: 641px) and (max-width: 768px) {
+    // 2 columns on small tablets
+    grid-template-columns: 1fr 1fr;
+    
+    // Make delete button span 2 columns
+    .action-btn.delete {
+      grid-column: 1 / -1;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    // 3 columns on larger screens
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  height: 36px;
+  gap: 6px;
+  height: 40px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
   text-decoration: none;
   border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  
+  // Touch-friendly sizing on mobile
+  @media (max-width: 640px) {
+    height: 44px;
+    font-size: 14px;
+    gap: 8px;
+    border-radius: 10px;
+    
+    // Minimum touch target
+    min-height: 44px;
+  }
+  
+  @media (min-width: 641px) {
+    height: 36px;
+  }
 
   mat-icon {
     font-size: 16px;
     width: 16px;
     height: 16px;
+    transition: transform 0.15s;
+    
+    @media (max-width: 640px) {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  // Active state for mobile feedback
+  &:active {
+    transform: scale(0.96);
+  }
+  
+  // Enhanced hover states
+  &:hover {
+    mat-icon {
+      transform: scale(1.1);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    span {
+      // Always show text on mobile
+      display: inline;
+    }
   }
 
   &.view {
@@ -592,6 +833,7 @@
     &:hover {
       background: #dcfce7;
       border-color: #86efac;
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
     }
   }
 
@@ -603,6 +845,7 @@
     &:hover {
       background: #dbeafe;
       border-color: #93c5fd;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
     }
   }
 
@@ -614,6 +857,7 @@
     &:hover {
       background: #fef2f2;
       border-color: #fca5a5;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
     }
   }
 }
