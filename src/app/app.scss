@@ -198,24 +198,46 @@
 
       .user-chip {
         width: 100%;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        padding: 10px 16px;
+        gap: 8px;
+        padding: 12px 16px;
         background: var(--surface-hover);
         border-radius: 8px;
 
+        .user-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
         .user-label {
           display: inline !important;
+          font-size: 15px;
+          font-weight: 500;
         }
       }
 
       .mobile-logout {
         width: 100%;
+        display: flex;
+        align-items: center;
         justify-content: center;
-        padding: 10px 16px;
+        gap: 8px;
+        padding: 12px 16px;
         border-radius: 8px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
 
         span {
           display: inline !important;
+          font-size: 15px;
+          font-weight: 500;
         }
       }
     }
