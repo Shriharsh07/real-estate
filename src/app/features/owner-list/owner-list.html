@@ -36,15 +36,15 @@
         <div class="owner-avatar">
           <mat-icon>person</mat-icon>
         </div>
-        
+
         <div class="owner-details">
           <h3 class="owner-name">{{ owner.firstName }} {{ owner.lastName }}</h3>
-          
+
           <div class="meta-row">
             <mat-icon class="meta-icon">phone</mat-icon>
             <span>{{ owner.contactNumber }}</span>
           </div>
-          
+
           <div class="meta-row" *ngIf="owner.email">
             <mat-icon class="meta-icon">email</mat-icon>
             <span>{{ owner.email }}</span>
@@ -57,11 +57,11 @@
         </div>
 
         <div class="owner-actions">
-          <a class="action-btn edit" [routerLink]="['/owner-form', owner._id]">
+          <a class="action-btn edit" [routerLink]="['/owner-form', owner._id]" (click)="$event.stopPropagation()">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
           </a>
-          <button class="action-btn delete" (click)="delete(owner._id)">
+          <button class="action-btn delete" (click)="delete(owner._id); $event.stopPropagation()">
             <mat-icon>delete_outline</mat-icon>
             <span>Delete</span>
           </button>
