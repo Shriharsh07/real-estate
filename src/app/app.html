@@ -14,8 +14,11 @@
 
       <!-- Mobile menu toggle -->
       <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
-        <mat-icon *ngIf="!mobileMenuOpen">menu</mat-icon>
-        <mat-icon *ngIf="mobileMenuOpen">close</mat-icon>
+        <div class="hamburger-icon" [class.open]="mobileMenuOpen">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </button>
 
       <!-- Nav links -->

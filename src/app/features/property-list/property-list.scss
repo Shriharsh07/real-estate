@@ -173,6 +173,13 @@
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
   animation: slideDown 0.3s ease;
+  position: relative;
+  z-index: 10;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    z-index: 100;
+  }
 }
 
 @keyframes slideDown {
@@ -385,16 +392,24 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     border-radius: 8px !important;
     max-height: 256px !important;
+    z-index: 9999 !important;
+    position: fixed !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 
   .mat-mdc-option {
     font-size: 14px !important;
     line-height: 1.5 !important;
     color: var(--text-primary) !important;
-    min-height: 40px !important;
+    min-height: 48px !important;
     padding: 0 16px !important;
 
     &:hover {
+      background: var(--surface-hover) !important;
+    }
+
+    &:active {
       background: var(--surface-hover) !important;
     }
 
@@ -406,6 +421,16 @@
     .mdc-list-item__primary-text {
       font-size: 14px !important;
       color: inherit !important;
+    }
+  }
+
+  // Ensure select trigger is clickable on mobile
+  .mat-mdc-select-trigger {
+    cursor: pointer !important;
+    min-height: 48px !important;
+
+    @media (max-width: 768px) {
+      min-height: 48px !important;
     }
   }
 }
