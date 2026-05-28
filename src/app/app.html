@@ -73,4 +73,15 @@
     <router-outlet></router-outlet>
   </main>
 
+  @if (!isLoginPage) {
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span class="footer-text">© 2025 EstateHub. All rights reserved.</span>
+      <div class="app-version">
+        <span>v{{ appVersion }}</span>
+      </div>
+    </div>
+  </footer>
+  }
+
 </div>

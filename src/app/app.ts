@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog';
+import { APP_VERSION } from '../environments/version';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog';
 })
 export class App {
   protected readonly title = signal('real-estate-app');
+  appVersion = APP_VERSION;
   isLoginPage = false;
   mobileMenuOpen = false;
 
