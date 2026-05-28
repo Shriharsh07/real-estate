@@ -99,7 +99,7 @@ export class PropertyList implements OnInit {
       .subscribe({
         next: (res: any) => {
           console.log('Properties loaded:', res);
-          this.properties = Array.isArray(res) ? res : [res];
+          this.properties = Array.isArray(res) ? res : [];
           this.cdr.markForCheck();
         },
         error: (err: any) => {

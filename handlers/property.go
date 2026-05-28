@@ -103,7 +103,7 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var properties []models.Property
+	properties := []models.Property{}
 	if err = cursor.All(context.Background(), &properties); err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return

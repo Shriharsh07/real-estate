@@ -49,7 +49,7 @@ export class OwnerList implements OnInit {
       .subscribe({
         next: (res: any) => {
           console.log('Owners loaded:', res);
-          this.owners = Array.isArray(res) ? res : [res];
+          this.owners = Array.isArray(res) ? res : [];
           this.cdr.markForCheck();
         },
         error: (err: any) => {

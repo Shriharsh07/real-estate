@@ -44,7 +44,7 @@ func GetOwners(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var owners []models.Owner
+	owners := []models.Owner{}
 	if err = cursor.All(context.Background(), &owners); err != nil {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
