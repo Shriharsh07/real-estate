@@ -84,7 +84,7 @@ func UploadImages(w http.ResponseWriter, r *http.Request) {
 			Folder: "properties",
 		}
 
-		uploadResult, err := config.CloudinaryClient.Upload.Upload(context.Background(), compressedBytes, uploadParams)
+		uploadResult, err := config.CloudinaryClient.Upload.Upload(context.Background(), bytes.NewReader(compressedBytes), uploadParams)
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, err.Error())
 			return
