@@ -89,6 +89,29 @@ form {
   gap: 20px;
 }
 
+// ── Form field wrapper with separate label ───────────────────────────────────────
+.form-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.field-full {
+    width: 100%;
+  }
+
+  &.field-price {
+    max-width: 300px;
+  }
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+  margin: 0;
+}
+
 .error-message {
   display: flex;
   align-items: center;

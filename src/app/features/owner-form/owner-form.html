@@ -30,38 +30,46 @@
           </div>
 
           <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <mat-icon matPrefix class="field-icon">badge</mat-icon>
-              <input matInput formControlName="firstName" placeholder="e.g., John" />
-              <mat-error *ngIf="firstName?.hasError('required')">First name is required</mat-error>
-              <mat-error *ngIf="firstName?.hasError('minlength')">First name must be at least 2 characters</mat-error>
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">First Name</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">badge</mat-icon>
+                <input matInput formControlName="firstName" placeholder="e.g., John" />
+                <mat-error *ngIf="firstName?.hasError('required')">First name is required</mat-error>
+                <mat-error *ngIf="firstName?.hasError('minlength')">First name must be at least 2 characters</mat-error>
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <mat-icon matPrefix class="field-icon">badge</mat-icon>
-              <input matInput formControlName="lastName" placeholder="e.g., Doe" />
-              <mat-error *ngIf="lastName?.hasError('required')">Last name is required</mat-error>
-              <mat-error *ngIf="lastName?.hasError('minlength')">Last name must be at least 2 characters</mat-error>
+            <div class="form-field-wrapper">
+              <label class="field-label">Last Name</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">badge</mat-icon>
+                <input matInput formControlName="lastName" placeholder="e.g., Doe" />
+                <mat-error *ngIf="lastName?.hasError('required')">Last name is required</mat-error>
+                <mat-error *ngIf="lastName?.hasError('minlength')">Last name must be at least 2 characters</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-field-wrapper field-full">
+            <label class="field-label">Contact Number</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">phone</mat-icon>
+              <input matInput formControlName="contactNumber" placeholder="e.g., 9876543210" maxlength="10"
+                     (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
+              <mat-error *ngIf="contactNumber?.hasError('required')">Contact number is required</mat-error>
+              <mat-error *ngIf="contactNumber?.hasError('pattern')">Contact number must be exactly 10 digits</mat-error>
             </mat-form-field>
           </div>
 
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Contact Number</mat-label>
-            <mat-icon matPrefix class="field-icon">phone</mat-icon>
-            <input matInput formControlName="contactNumber" placeholder="e.g., 9876543210" maxlength="10"
-                   (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
-            <mat-error *ngIf="contactNumber?.hasError('required')">Contact number is required</mat-error>
-            <mat-error *ngIf="contactNumber?.hasError('pattern')">Contact number must be exactly 10 digits</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Email (Optional)</mat-label>
-            <mat-icon matPrefix class="field-icon">email</mat-icon>
-            <input matInput formControlName="email" placeholder="e.g., john@example.com" />
-            <mat-error *ngIf="email?.hasError('email')">Please enter a valid email address</mat-error>
-          </mat-form-field>
+          <div class="form-field-wrapper field-full">
+            <label class="field-label">Email (Optional)</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">email</mat-icon>
+              <input matInput formControlName="email" placeholder="e.g., john@example.com" />
+              <mat-error *ngIf="email?.hasError('email')">Please enter a valid email address</mat-error>
+            </mat-form-field>
+          </div>
         </div>
 
         <!-- Form actions -->

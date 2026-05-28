@@ -29,44 +29,54 @@
             <span>Basic Information</span>
           </div>
 
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Property Name</mat-label>
-            <mat-icon matPrefix class="field-icon">home</mat-icon>
-            <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Description</mat-label>
-            <mat-icon matPrefix class="field-icon">notes</mat-icon>
-            <textarea matInput formControlName="description" rows="3" placeholder="Brief description of the property"></textarea>
-          </mat-form-field>
-
-          <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Location</mat-label>
-              <mat-icon matPrefix class="field-icon">location_on</mat-icon>
-              <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Pincode</mat-label>
-              <mat-icon matPrefix class="field-icon">pin</mat-icon>
-              <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6"
-                     (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
-              <mat-error *ngIf="form.get('pincode')?.hasError('pattern')">Pincode must be exactly 6 digits</mat-error>
+          <div class="form-field-wrapper field-full">
+            <label class="field-label">Property Name</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">home</mat-icon>
+              <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" />
             </mat-form-field>
           </div>
 
-          <mat-form-field appearance="outline" class="field-full">
-            <mat-label>Owner (Optional)</mat-label>
-            <mat-icon matPrefix class="field-icon">person</mat-icon>
-            <mat-select formControlName="owner">
-              <mat-option [value]="null">No Owner</mat-option>
-              <mat-option *ngFor="let owner of owners" [value]="owner._id">
-                {{ owner.firstName }} {{ owner.lastName }} - {{ owner.contactNumber }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <div class="form-field-wrapper field-full">
+            <label class="field-label">Description</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">notes</mat-icon>
+              <textarea matInput formControlName="description" rows="3" placeholder="Brief description of the property"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field-wrapper">
+              <label class="field-label">Location</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">location_on</mat-icon>
+                <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-field-wrapper">
+              <label class="field-label">Pincode</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">pin</mat-icon>
+                <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6"
+                       (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
+                <mat-error *ngIf="form.get('pincode')?.hasError('pattern')">Pincode must be exactly 6 digits</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-field-wrapper field-full">
+            <label class="field-label">Owner (Optional)</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">person</mat-icon>
+              <mat-select formControlName="owner">
+                <mat-option [value]="null">No Owner</mat-option>
+                <mat-option *ngFor="let owner of owners" [value]="owner._id">
+                  {{ owner.firstName }} {{ owner.lastName }} - {{ owner.contactNumber }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
 
         <!-- Property Details -->
@@ -77,41 +87,47 @@
           </div>
 
           <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Property Type</mat-label>
-              <mat-icon matPrefix class="field-icon">home_work</mat-icon>
-              <mat-select formControlName="type">
-                <mat-option value="house">House</mat-option>
-                <mat-option value="apartment">Apartment</mat-option>
-                <mat-option value="duplex">Duplex</mat-option>
-                <mat-option value="land">Land</mat-option>
-                <mat-option value="commercial">Commercial</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Property Type</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">home_work</mat-icon>
+                <mat-select formControlName="type">
+                  <mat-option value="house">House</mat-option>
+                  <mat-option value="apartment">Apartment</mat-option>
+                  <mat-option value="duplex">Duplex</mat-option>
+                  <mat-option value="land">Land</mat-option>
+                  <mat-option value="commercial">Commercial</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Status</mat-label>
-              <mat-icon matPrefix class="field-icon">flag</mat-icon>
-              <mat-select formControlName="status">
-                <mat-option value="for-sale">For Sale</mat-option>
-                <mat-option value="for-rent">For Rent</mat-option>
-                <mat-option value="sold">Sold</mat-option>
-                <mat-option value="rented">Rented</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Status</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">flag</mat-icon>
+                <mat-select formControlName="status">
+                  <mat-option value="for-sale">For Sale</mat-option>
+                  <mat-option value="for-rent">For Rent</mat-option>
+                  <mat-option value="sold">Sold</mat-option>
+                  <mat-option value="rented">Rented</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
 
           <!-- Veg / Non-Veg preference — only for House, Apartment, Duplex -->
           <div class="form-grid" *ngIf="showVegField" style="margin-top: 10px;">
-            <mat-form-field appearance="outline">
-              <mat-label>Tenant Preference</mat-label>
-              <mat-icon matPrefix class="field-icon">restaurant</mat-icon>
-              <mat-select formControlName="vegPreference">
-                <mat-option value="veg">Veg Only</mat-option>
-                <mat-option value="non-veg">Non-Veg Allowed</mat-option>
-                <mat-option value="any">No Preference</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Tenant Preference</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">restaurant</mat-icon>
+                <mat-select formControlName="vegPreference">
+                  <mat-option value="veg">Veg Only</mat-option>
+                  <mat-option value="non-veg">Non-Veg Allowed</mat-option>
+                  <mat-option value="any">No Preference</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
         </div>
 
@@ -123,35 +139,45 @@
           </div>
 
           <div class="form-grid form-grid-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Length (ft)</mat-label>
-              <mat-icon matPrefix class="field-icon">width</mat-icon>
-              <input matInput type="number" formControlName="length" placeholder="e.g., 40" />
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Length (ft)</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">width</mat-icon>
+                <input matInput type="number" formControlName="length" placeholder="e.g., 40" />
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Width (ft)</mat-label>
-              <mat-icon matPrefix class="field-icon">height</mat-icon>
-              <input matInput type="number" formControlName="width" placeholder="e.g., 30" />
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Width (ft)</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">height</mat-icon>
+                <input matInput type="number" formControlName="width" placeholder="e.g., 30" />
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Total Sq. Ft</mat-label>
-              <mat-icon matPrefix class="field-icon">square_foot</mat-icon>
-              <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated" readonly />
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Total Sq. Ft</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">square_foot</mat-icon>
+                <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated" readonly />
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Bedrooms</mat-label>
-              <mat-icon matPrefix class="field-icon">bed</mat-icon>
-              <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" />
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Bedrooms</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">bed</mat-icon>
+                <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" />
+              </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Bathrooms</mat-label>
-              <mat-icon matPrefix class="field-icon">bathtub</mat-icon>
-              <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" />
-            </mat-form-field>
+            <div class="form-field-wrapper">
+              <label class="field-label">Bathrooms</label>
+              <mat-form-field appearance="fill">
+                <mat-icon matPrefix class="field-icon">bathtub</mat-icon>
+                <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" />
+              </mat-form-field>
+            </div>
           </div>
         </div>
 
@@ -162,11 +188,13 @@
             <span>Pricing</span>
           </div>
 
-          <mat-form-field appearance="outline" class="field-price">
-            <mat-label>Price</mat-label>
-            <mat-icon matPrefix class="field-icon">currency_rupee</mat-icon>
-            <input matInput type="number" formControlName="price" placeholder="0" />
-          </mat-form-field>
+          <div class="form-field-wrapper field-price">
+            <label class="field-label">Price</label>
+            <mat-form-field appearance="fill">
+              <mat-icon matPrefix class="field-icon">currency_rupee</mat-icon>
+              <input matInput type="number" formControlName="price" placeholder="0" />
+            </mat-form-field>
+          </div>
         </div>
 
         <!-- Image Upload -->
