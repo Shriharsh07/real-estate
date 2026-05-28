@@ -2,10 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-// GitHub repository info. Set GITHUB_OWNER and GITHUB_REPO in production env vars.
-const GITHUB_OWNER = process.env.ACCOUNT_OWNER;
-const GITHUB_REPO = process.env.REPO_NAME;
-const GITHUB_TOKEN = process.env.VERSION_TOKEN; // Optional: for private repos or rate limiting
+// Check if we're in a CI/CD environment
+const isCI = process.env.CI === 'true' || process.env.VERCEL === '1' || process.env.GITHUB_ACTIONS === 'true';
+
+// GitHub repository info (only used in CI/CD)
+const GITHUB_OWNER = process.env.GITHUB_OWNER;
+const GITHUB_REPO = process.env.GITHUB_REPO;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; // Optional: for private repos or rate limiting
 
 // Function to fetch latest tag from GitHub
 function fetchLatestTagFromGitHub() {
@@ -37,7 +40,8 @@ function fetchLatestTagFromGitHub() {
         if (res.statusCode === 200) {
           try {
             const release = JSON.parse(data);
-            const version = release.tag_name;
+            // Remove 'v' prefix if present
+            const version = release.tag_name.replace(/^v/, '');
             resolve(version);
           } catch (e) {
             reject(new Error('Failed to parse GitHub response'));
@@ -70,24 +74,29 @@ function fetchLatestTagFromGitHub() {
 async function setVersion() {
   let version;
 
-  if (GITHUB_OWNER && GITHUB_REPO) {
-    console.log(`Fetching latest release from GitHub: ${GITHUB_OWNER}/${GITHUB_REPO}`);
+  // Only try GitHub fetch in CI/CD environment
+  if (isCI) {
+    console.log('Running in CI/CD, attempting to fetch version from GitHub...');
     try {
       version = await fetchLatestTagFromGitHub();
     } catch (error) {
       console.log('GitHub fetch error:', error.message);
     }
   } else {
-    console.log('GITHUB_OWNER or GITHUB_REPO not set, skipping GitHub fetch');
+    console.log('Running locally, using package.json version');
   }
 
-  // Fall back to package.json if GitHub fetch failed
+  // Fall back to package.json if GitHub fetch failed or not in CI
   if (!version) {
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    version = `Beta_V${packageJson.version}`;
+    version = packageJson.version;
   }
 
+  // Write to version.ts
+  const versionTsPath = path.join(__dirname, '..', 'src', 'environments', 'version.ts');
+  const versionTsContent = `export const APP_VERSION = '${version}';\n`;
+  fs.writeFileSync(versionTsPath, versionTsContent);
   // Write to version.ts
   const versionTsPath = path.join(__dirname, '..', 'src', 'environments', 'version.ts');
   const versionTsContent = `export const APP_VERSION = '${version}';\n`;
