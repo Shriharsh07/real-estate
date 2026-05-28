@@ -155,7 +155,8 @@ export class PropertyFormComponent implements OnInit {
         },
         error: (err) => {
           this.isUploading = false;
-          reject(err);
+          const errorMessage = err?.error?.message || err?.error || err?.message || 'Failed to upload images';
+          reject(new Error(errorMessage));
         }
       });
     });
@@ -194,8 +195,8 @@ export class PropertyFormComponent implements OnInit {
         });
       }
 
-    } catch (err) {
-      this.error = "Image upload failed";
+    } catch (err: any) {
+      this.error = err?.message || 'Image upload failed';
       this.loading = false;
     }
   }
