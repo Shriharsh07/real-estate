@@ -101,7 +101,7 @@
     background: var(--surface-hover);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: flex;
   }
 }
@@ -116,7 +116,7 @@
     gap: 4px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     position: fixed;
     top: 56px;
     left: 0;
@@ -191,7 +191,7 @@
   .mobile-nav-divider {
     display: none;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       display: block;
     }
   }
@@ -199,7 +199,7 @@
   .mobile-user-section {
     display: none;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       display: flex;
     }
   }
@@ -256,7 +256,7 @@
     gap: 6px;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 
@@ -333,7 +333,7 @@
   z-index: 198;
   backdrop-filter: blur(2px);
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: block;
   }
 }
