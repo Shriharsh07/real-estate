@@ -568,6 +568,11 @@
   
   // Mobile touch feedback
   @media (max-width: 640px) {
+    border-radius: 10px !important;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 112px;
+
     &:active {
       transform: translateY(-2px) scale(0.98);
     }
@@ -589,6 +594,13 @@
   
   @media (min-width: 1024px) {
     height: 170px;
+  }
+
+  @media (max-width: 640px) {
+    width: 96px;
+    height: 96px;
+    margin: 8px;
+    border-radius: 8px;
   }
 
   img {
@@ -636,10 +648,7 @@
     
     // Smaller badge on mobile
     @media (max-width: 640px) {
-      padding: 4px 10px;
-      font-size: 10px;
-      top: 8px;
-      right: 8px;
+      display: none;
     }
 
     &.badge-for-sale  { color: #22c55e; border: 1px solid #bbf7d0; }
@@ -665,6 +674,14 @@
   @media (min-width: 1024px) {
     padding: 18px 18px 16px !important;
   }
+
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 34px;
+    column-gap: 10px;
+    min-width: 0;
+    padding: 10px 10px 10px 12px !important;
+  }
 }
 
 .property-title {
@@ -681,7 +698,8 @@
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    font-size: 17px;
+    font-size: 15px;
+    margin-bottom: 8px;
   }
   
   @media (min-width: 641px) {
@@ -789,7 +807,40 @@
   }
 }
 
+.mobile-status {
+  display: none;
+}
+
 // ── Actions ───────────────────────────────────────────────────────────────────
+@media (max-width: 640px) {
+  .meta-row {
+    display: none;
+  }
+
+  .mobile-status {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .price-row {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .price-row .price-label {
+    display: none;
+  }
+
+  .price-row .price-value {
+    max-width: 100%;
+  }
+}
+
 .property-actions {
   display: grid;
   gap: 8px;
@@ -797,9 +848,14 @@
   
   // Responsive button layout
   @media (max-width: 640px) {
-    // Stack vertically on mobile
+    display: grid;
     grid-template-columns: 1fr;
-    gap: 10px;
+    grid-column: 2;
+    grid-row: 1 / 4;
+    gap: 6px;
+    align-self: center;
+    margin-top: 0;
+    width: 34px;
   }
   
   @media (min-width: 641px) and (max-width: 768px) {
@@ -836,13 +892,12 @@
   
   // Touch-friendly sizing on mobile
   @media (max-width: 640px) {
-    height: 44px;
-    font-size: 14px;
-    gap: 8px;
-    border-radius: 10px;
-    
-    // Minimum touch target
-    min-height: 44px;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
+    gap: 0;
+    border-radius: 8px;
   }
   
   @media (min-width: 641px) {
@@ -876,8 +931,7 @@
   
   @media (max-width: 640px) {
     span {
-      // Always show text on mobile
-      display: inline;
+      display: none;
     }
   }
 

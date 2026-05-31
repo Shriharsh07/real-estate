@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PropertyService } from '../../core/services/property';
+import { IndianNumberPipe } from '../../shared/pipes/indian-number.pipe';
 
 @Component({
   selector: 'app-property-detail',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatIconModule, MatButtonModule, RouterLink, IndianNumberPipe],
   templateUrl: './property-detail.html',
   styleUrl: './property-detail.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
