@@ -13,11 +13,12 @@ import { MatInputModule } from "@angular/material/input";
 import { finalize } from 'rxjs/operators';
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { IndianNumberPipe } from "../../shared/pipes/indian-number.pipe";
 
 @Component({
   selector: "app-property-list",
   standalone: true,
-  imports: [ CommonModule, MatCardModule, MatButtonModule, RouterLink, MatIconModule, MatFormFieldModule, MatSelectModule, MatInputModule, ReactiveFormsModule],
+  imports: [ CommonModule, MatCardModule, MatButtonModule, RouterLink, MatIconModule, MatFormFieldModule, MatSelectModule, MatInputModule, ReactiveFormsModule, IndianNumberPipe],
   templateUrl: "./property-list.html",
   styleUrl: "./property-list.scss",
   changeDetection: ChangeDetectionStrategy.OnPush

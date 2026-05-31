@@ -130,14 +130,10 @@
 
         <div class="price-row">
           <span class="price-label">Price</span>
-          <span class="price-value">₹{{ p.price | number }}</span>
+          <span class="price-value">₹{{ p.price | indianNumber }}</span>
         </div>
 
         <div class="property-actions">
-          <button class="action-btn view" (click)="viewDetails(p._id); $event.stopPropagation()">
-            <mat-icon>visibility</mat-icon>
-            <span>View</span>
-          </button>
           <a class="action-btn edit" [routerLink]="['/property-form', p._id]" (click)="$event.stopPropagation()">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
