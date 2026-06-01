@@ -573,6 +573,11 @@
     align-items: stretch;
     min-height: 112px;
 
+    border-radius: 10px !important;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 112px;
+
     &:active {
       transform: translateY(-2px) scale(0.98);
     }
@@ -594,6 +599,13 @@
   
   @media (min-width: 1024px) {
     height: 170px;
+  }
+
+  @media (max-width: 640px) {
+    width: 96px;
+    height: 96px;
+    margin: 8px;
+    border-radius: 8px;
   }
 
   @media (max-width: 640px) {
