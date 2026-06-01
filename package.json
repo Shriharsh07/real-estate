@@ -4,8 +4,7 @@
 "scripts": {
   "ng": "ng",
   "start": "ng serve",
-  "set-version": "node scripts/set-version.js",
-  "build": "npm run set-version && ng build --configuration production",
+  "build": "ng build --configuration production",
   "watch": "ng build --watch --configuration development",
   "test": "ng test"
 },
