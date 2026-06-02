@@ -216,7 +216,7 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
 
 	total, _ := collection.CountDocuments(context.Background(), bson.M{})
-	available, _ := collection.CountDocuments(context.Background(), bson.M{"status": "available"})
+	available, _ := collection.CountDocuments(context.Background(), bson.M{"status": bson.M{"$in": []string{"for-sale", "for-rent"}}})
 	sold, _ := collection.CountDocuments(context.Background(), bson.M{"status": "sold"})
 	rented, _ := collection.CountDocuments(context.Background(), bson.M{"status": "rented"})
 
