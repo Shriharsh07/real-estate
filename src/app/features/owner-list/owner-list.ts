@@ -54,7 +54,7 @@ export class OwnerList implements OnInit {
         },
         error: (err: any) => {
           console.error('Error loading owners:', err);
-          this.error = err?.error?.message || 'Failed to load owners';
+          this.error = err?.error?.error || 'Failed to load owners';
           this.cdr.markForCheck();
         }
       });

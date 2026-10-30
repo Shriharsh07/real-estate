@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"real-estate-api/middleware"
+	"regexp"
+	"strconv"
 	"time"
 
 	"real-estate-api/config"
@@ -50,6 +53,10 @@ func CreateProperty(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := validateProperty(property); err != "" {
+		writeError(w, 400, err)
+		return
+	}
 	property.CreatedAt = primitive.NewDateTimeFromTime(time.Now())
 	property.UpdatedAt = primitive.NewDateTimeFromTime(time.Now())
 
@@ -76,7 +83,7 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 		filter["status"] = statusParam
 	}
 	if locationParam := r.URL.Query().Get("location"); locationParam != "" {
-		filter["location"] = bson.M{"$regex": locationParam, "$options": "i"}
+		filter["location"] = bson.M{"$regex": regexp.QuoteMeta(locationParam), "$options": "i"}
 	}
 	if ownerParam := r.URL.Query().Get("owner"); ownerParam != "" {
 		ownerID, _ := primitive.ObjectIDFromHex(ownerParam)
@@ -88,14 +95,31 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 	if minPrice != "" || maxPrice != "" {
 		priceFilter := bson.M{}
 		if minPrice != "" {
-			priceFilter["$gte"] = minPrice
+			v, e := strconv.ParseFloat(minPrice, 64)
+			if e != nil {
+				writeError(w, 400, "Invalid price")
+				return
+			}
+			priceFilter["$gte"] = v
 		}
 		if maxPrice != "" {
-			priceFilter["$lte"] = maxPrice
+			v, e := strconv.ParseFloat(maxPrice, 64)
+			if e != nil {
+				writeError(w, 400, "Invalid price")
+				return
+			}
+			priceFilter["$lte"] = v
 		}
 		filter["price"] = priceFilter
 	}
 
+	if !middleware.IsAdmin(r) || r.URL.Query().Get("public") == "true" {
+		filter["published"] = true
+		filter["status"] = bson.M{"$in": []string{"for-sale", "for-rent"}}
+		if status := r.URL.Query().Get("status"); status == "for-sale" || status == "for-rent" {
+			filter["status"] = status
+		}
+	}
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := collection.Find(context.Background(), filter, opts)
 	if err != nil {
@@ -110,7 +134,7 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range properties {
-		if properties[i].Owner != nil {
+		if middleware.IsAdmin(r) && properties[i].Owner != nil {
 			ownerCollection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionOwners)
 			var owner models.Owner
 			err := ownerCollection.FindOne(context.Background(), bson.M{"_id": *properties[i].Owner}).Decode(&owner)
@@ -120,6 +144,14 @@ func GetProperties(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if !middleware.IsAdmin(r) || r.URL.Query().Get("public") == "true" {
+		summaries := []any{}
+		for _, p := range properties {
+			summaries = append(summaries, propertySummary(p))
+		}
+		writeJSON(w, 200, summaries)
+		return
+	}
 	writeJSON(w, http.StatusOK, properties)
 }
 
@@ -139,6 +171,18 @@ func GetPropertyById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !middleware.IsAdmin(r) {
+		if !publiclyAvailable(property) {
+			writeError(w, 404, "Property not found")
+			return
+		}
+		if middleware.Claims(r) == nil {
+			writeJSON(w, 200, propertySummary(property))
+			return
+		}
+		property.Owner = nil
+		property.OwnerData = nil
+	}
 	writeJSON(w, http.StatusOK, property)
 }
 
@@ -150,35 +194,29 @@ func UpdateProperty(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var updateData bson.M
-	if err := json.NewDecoder(r.Body).Decode(&updateData); err != nil {
-		writeError(w, http.StatusBadRequest, err.Error())
+	var propertyInput models.Property
+	if err := json.NewDecoder(r.Body).Decode(&propertyInput); err != nil {
+		writeError(w, 400, "Invalid property")
 		return
 	}
-
-	if typeVal, ok := updateData["type"].(string); ok {
-		if statusVal, ok := updateData["status"].(string); ok {
-			validStatuses, ok := validStatusByType[typeVal]
-			if !ok {
-				writeError(w, http.StatusBadRequest, "Invalid type")
-				return
-			}
-
-			statusValid := false
-			for _, status := range validStatuses {
-				if statusVal == status {
-					statusValid = true
-					break
-				}
-			}
-
-			if !statusValid {
-				writeError(w, http.StatusBadRequest, "Invalid status for type")
-				return
-			}
-		}
+	if err := validateProperty(propertyInput); err != "" {
+		writeError(w, 400, err)
+		return
 	}
-
+	raw, _ := bson.Marshal(propertyInput)
+	var updateData bson.M
+	bson.Unmarshal(raw, &updateData)
+	delete(updateData, "_id")
+	delete(updateData, "createdAt")
+	delete(updateData, "ownerData")
+	// Explicit nulls allow clearing optional fields when editing an existing listing.
+	updateData["owner"] = propertyInput.Owner
+	updateData["length"] = propertyInput.Length
+	updateData["width"] = propertyInput.Width
+	updateData["bedrooms"] = propertyInput.Bedrooms
+	updateData["bathrooms"] = propertyInput.Bathrooms
+	updateData["totalSqft"] = propertyInput.TotalSqft
+	updateData["vegPreference"] = propertyInput.VegPreference
 	updateData["updatedAt"] = primitive.NewDateTimeFromTime(time.Now())
 
 	collection := config.MongoClient.Database(config.DatabaseName).Collection(config.CollectionProperties)
@@ -220,10 +258,43 @@ func GetStats(w http.ResponseWriter, r *http.Request) {
 	sold, _ := collection.CountDocuments(context.Background(), bson.M{"status": "sold"})
 	rented, _ := collection.CountDocuments(context.Background(), bson.M{"status": "rented"})
 
+	published, _ := collection.CountDocuments(context.Background(), bson.M{"published": true})
+	enquiries, _ := config.MongoClient.Database(config.DatabaseName).Collection("enquiries").CountDocuments(context.Background(), bson.M{})
 	writeJSON(w, http.StatusOK, map[string]interface{}{
+		"published": published, "draft": total - published, "enquiries": enquiries,
 		"total":     total,
 		"available": available,
 		"sold":      sold,
 		"rented":    rented,
 	})
+}
+
+func propertySummary(p models.Property) map[string]any {
+	images := []string{}
+	if len(p.Images) > 0 {
+		images = append(images, p.Images[0])
+	}
+	return map[string]any{"_id": p.ID, "propertyName": p.PropertyName, "type": p.Type, "status": p.Status, "price": p.Price, "location": p.Location, "images": images}
+}
+func validateProperty(p models.Property) string {
+	if p.PropertyName == "" || p.Location == "" || p.Price < 0 {
+		return "Name, location and a non-negative price are required"
+	}
+	valid := false
+	for _, s := range validStatusByType[p.Type] {
+		if s == p.Status {
+			valid = true
+		}
+	}
+	if !valid {
+		return "Invalid type or status"
+	}
+	if len(p.Images) > 15 || len(p.Videos) > 2 {
+		return "Maximum 15 images and 2 videos"
+	}
+	return ""
+}
+
+func publiclyAvailable(p models.Property) bool {
+	return p.Published && (p.Status == "for-sale" || p.Status == "for-rent")
 }

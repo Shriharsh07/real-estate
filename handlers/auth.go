@@ -16,6 +16,10 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	if os.Getenv("JWT_SECRET") == "" {
+		writeError(w, 503, "Authentication unavailable")
+		return
+	}
 	var body struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -42,8 +46,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":  admin.ID.Hex(),
-		"exp": time.Now().Add(24 * time.Hour).Unix(),
+		"id":   admin.ID.Hex(),
+		"role": "admin",
+		"exp":  time.Now().Add(24 * time.Hour).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
@@ -58,6 +63,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		"user": map[string]any{
 			"id":       admin.ID,
 			"username": admin.Username,
+			"role":     "admin",
 		},
 	})
 }

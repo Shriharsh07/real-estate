@@ -1,85 +1,43 @@
-<div class="app-container">
-
-  @if (!isLoginPage) {
-  <header class="app-header">
-    <div class="navbar">
-
-      <!-- Brand -->
-      <a routerLink="/dashboard" class="navbar-brand" (click)="closeMobileMenu()">
-        <div class="brand-icon-wrap">
-          <mat-icon class="brand-mat-icon">apartment</mat-icon>
-        </div>
-        <span class="brand-name">EstateHub</span>
-      </a>
-
-      <!-- Mobile menu toggle -->
-      <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
-        <div class="hamburger-icon" [class.open]="mobileMenuOpen">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
-
-      <!-- Nav links -->
-      <nav class="navbar-nav" [class.mobile-open]="mobileMenuOpen">
-        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
-          <mat-icon>dashboard</mat-icon>
-          <span>Dashboard</span>
-        </a>
-        <a routerLink="/property-list" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
-          <mat-icon>home_work</mat-icon>
-          <span>Properties</span>
-        </a>
-        <a routerLink="/owner-list" routerLinkActive="active" class="nav-link" (click)="closeMobileMenu()">
-          <mat-icon>people</mat-icon>
-          <span>Owners</span>
-        </a>
-
-        <!-- Mobile-only user actions -->
-        <div class="mobile-nav-divider"></div>
-        <div class="mobile-user-section">
-          <div class="user-chip">
-            <mat-icon class="user-icon">account_circle</mat-icon>
-            <span class="user-label">Admin</span>
-          </div>
-          <button class="logout-btn mobile-logout" (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </button>
-        </div>
-      </nav>
-
-      <!-- Right side -->
-      <div class="navbar-end">
-        <div class="user-chip">
-          <mat-icon class="user-icon">account_circle</mat-icon>
-          <span class="user-label">Admin</span>
-        </div>
-        <button class="logout-btn" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Logout</span>
-        </button>
-      </div>
-
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="nav-wrap">
+    <a class="brand" routerLink="/" (click)="menu=false"
+      ><span class="brand-mark">⌂</span>Estate<span>Hub</span
+      ><small>SPACES FOR YOUR NEXT CHAPTER</small></a
+    ><button
+      class="menu-toggle"
+      (click)="menu=!menu"
+      [attr.aria-expanded]="menu"
+      aria-controls="navigation"
+      aria-label="Toggle navigation"
+    >
+      ☰
+    </button>
+    <nav id="navigation" [class.open]="menu">
+      <a routerLink="/" (click)="menu=false">Explore properties</a
+      >@if(auth.isAdmin){<a routerLink="/dashboard" (click)="menu=false"
+        >Overview</a
+      ><a routerLink="/property-list" (click)="menu=false">Manage listings</a
+      ><a routerLink="/owner-list" (click)="menu=false">Owners</a
+      ><a routerLink="/enquiries" (click)="menu=false">Enquiries</a>}
+      @if(auth.loggedIn){<button class="btn secondary" (click)="logout()">
+        Log out</button
+      >}@else{<a routerLink="/login" (click)="menu=false">Log in</a
+      ><a class="btn" routerLink="/signup" (click)="menu=false">Get started ↗</a
+      >}
+    </nav>
+  </div>
+</header>
+<main id="main" tabindex="-1"><router-outlet /></main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a class="brand" routerLink="/">Estate<span>Hub</span></a>
+      <p>Find a place. Start your next chapter.</p>
     </div>
-  </header>
-  }
-
-  <!-- Mobile menu backdrop -->
-  <div class="mobile-menu-backdrop" *ngIf="mobileMenuOpen" (click)="closeMobileMenu()"></div>
-
-  <main class="app-main">
-    <router-outlet></router-outlet>
-  </main>
-
-  <footer class="app-footer">
-    <div class="footer-content">
-      <span class="footer-text">© {{ currentYear }} EstateHub. All rights reserved.</span>
-      <div class="app-version">
-        <span>{{ appVersion }}</span>
-      </div>
+    <div class="footer-meta">
+      <span>© {{year}} EstateHub. All rights reserved.</span>
+      <a class="footer-admin" routerLink="/admin/login">Admin sign in</a>
     </div>
-  </footer>
-
-</div>
+  </div>
+</footer>

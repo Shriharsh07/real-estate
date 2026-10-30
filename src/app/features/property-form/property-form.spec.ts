@@ -1,17 +1,21 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PropertyForm } from './property-form';
+import { PropertyFormComponent } from './property-form';
 
-describe('PropertyForm', () => {
-  let component: PropertyForm;
-  let fixture: ComponentFixture<PropertyForm>;
+describe('PropertyFormComponent', () => {
+  let component: PropertyFormComponent;
+  let fixture: ComponentFixture<PropertyFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PropertyForm],
+      providers:[provideHttpClient(),provideHttpClientTesting(),provideRouter([])],
+      imports: [PropertyFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PropertyForm);
+    fixture = TestBed.createComponent(PropertyFormComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
