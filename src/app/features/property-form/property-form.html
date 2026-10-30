@@ -1,10 +1,14 @@
 <div class="property-form-page">
-
   <!-- Page header -->
   <div class="page-header">
     <div class="page-header-left">
-      <h1 class="page-title">{{ isEditMode ? 'Edit Property' : 'Add Property' }}</h1>
-      <p class="page-subtitle">{{ isEditMode ? 'Update property information' : 'Fill in the details below to list a new property' }}</p>
+      <h1 class="page-title">
+        {{ isEditMode ? 'Edit Property' : 'Add Property' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ isEditMode ? 'Update property information' : 'Fill in the details
+        below to list a new property' }}
+      </p>
     </div>
     <a class="cancel-top-btn" routerLink="/property-list">
       <mat-icon>arrow_back</mat-icon>
@@ -15,7 +19,6 @@
   <mat-card class="form-card">
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="submit()">
-
         <!-- Error Message -->
         <div class="error-message" *ngIf="error">
           <mat-icon>error_outline</mat-icon>
@@ -30,49 +33,80 @@
           </div>
 
           <div class="form-field-wrapper field-full">
-            <label class="field-label">Property Name</label>
+            <label class="field-label" for="field-propertyName"
+              >Property Name</label
+            >
             <mat-form-field appearance="fill">
               <mat-icon matPrefix class="field-icon">home</mat-icon>
-              <input matInput formControlName="propertyName" placeholder="e.g., Beautiful Modern House" />
+              <input
+                matInput
+                id="field-propertyName"
+                formControlName="propertyName"
+                placeholder="e.g., Beautiful Modern House"
+              />
             </mat-form-field>
           </div>
 
           <div class="form-field-wrapper field-full">
-            <label class="field-label">Description</label>
+            <label class="field-label" for="field-description"
+              >Description</label
+            >
             <mat-form-field appearance="fill">
               <mat-icon matPrefix class="field-icon">notes</mat-icon>
-              <textarea matInput formControlName="description" rows="3" placeholder="Brief description of the property"></textarea>
+              <textarea
+                matInput
+                id="field-description"
+                formControlName="description"
+                rows="3"
+                placeholder="Brief description of the property"
+              ></textarea>
             </mat-form-field>
           </div>
 
           <div class="form-grid">
             <div class="form-field-wrapper">
-              <label class="field-label">Location</label>
+              <label class="field-label" for="field-location">Location</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">location_on</mat-icon>
-                <input matInput formControlName="location" placeholder="e.g., Sai Nagar, Chennai" />
+                <input
+                  matInput
+                  id="field-location"
+                  formControlName="location"
+                  placeholder="e.g., Sai Nagar, Chennai"
+                />
               </mat-form-field>
             </div>
 
             <div class="form-field-wrapper">
-              <label class="field-label">Pincode</label>
+              <label class="field-label" for="field-pincode">Pincode</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">pin</mat-icon>
-                <input matInput formControlName="pincode" placeholder="e.g., 600001" maxlength="6"
-                       (keypress)="$event.charCode >= 48 && $event.charCode <= 57" />
-                <mat-error *ngIf="form.get('pincode')?.hasError('pattern')">Pincode must be exactly 6 digits</mat-error>
+                <input
+                  matInput
+                  id="field-pincode"
+                  formControlName="pincode"
+                  placeholder="e.g., 600001"
+                  maxlength="6"
+                  (keypress)="$event.charCode >= 48 && $event.charCode <= 57"
+                />
+                <mat-error *ngIf="form.get('pincode')?.hasError('pattern')"
+                  >Pincode must be exactly 6 digits</mat-error
+                >
               </mat-form-field>
             </div>
           </div>
 
           <div class="form-field-wrapper field-full">
-            <label class="field-label">Owner (Optional)</label>
+            <label class="field-label" for="field-owner"
+              >Owner (Optional)</label
+            >
             <mat-form-field appearance="fill">
               <mat-icon matPrefix class="field-icon">person</mat-icon>
-              <mat-select formControlName="owner">
+              <mat-select id="field-owner" formControlName="owner">
                 <mat-option [value]="null">No Owner</mat-option>
                 <mat-option *ngFor="let owner of owners" [value]="owner._id">
-                  {{ owner.firstName }} {{ owner.lastName }} - {{ owner.contactNumber }}
+                  {{ owner.firstName }} {{ owner.lastName }} - {{
+                  owner.contactNumber }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -88,10 +122,10 @@
 
           <div class="form-grid">
             <div class="form-field-wrapper">
-              <label class="field-label">Property Type</label>
+              <label class="field-label" for="field-type">Property Type</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">home_work</mat-icon>
-                <mat-select formControlName="type">
+                <mat-select id="field-type" formControlName="type">
                   <mat-option value="house">House</mat-option>
                   <mat-option value="apartment">Apartment</mat-option>
                   <mat-option value="duplex">Duplex</mat-option>
@@ -102,10 +136,10 @@
             </div>
 
             <div class="form-field-wrapper">
-              <label class="field-label">Status</label>
+              <label class="field-label" for="field-status">Status</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">flag</mat-icon>
-                <mat-select formControlName="status">
+                <mat-select id="field-status" formControlName="status">
                   <mat-option value="for-sale">For Sale</mat-option>
                   <mat-option value="for-rent">For Rent</mat-option>
                   <mat-option value="sold">Sold</mat-option>
@@ -116,12 +150,17 @@
           </div>
 
           <!-- Veg / Non-Veg preference — only for House, Apartment, Duplex -->
-          <div class="form-grid" *ngIf="showVegField" style="margin-top: 10px;">
+          <div class="form-grid" *ngIf="showVegField" style="margin-top: 10px">
             <div class="form-field-wrapper">
-              <label class="field-label">Tenant Preference</label>
+              <label class="field-label" for="field-vegPreference"
+                >Tenant Preference</label
+              >
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">restaurant</mat-icon>
-                <mat-select formControlName="vegPreference">
+                <mat-select
+                  id="field-vegPreference"
+                  formControlName="vegPreference"
+                >
                   <mat-option value="veg">Veg Only</mat-option>
                   <mat-option value="non-veg">Non-Veg Allowed</mat-option>
                   <mat-option value="any">No Preference</mat-option>
@@ -140,44 +179,77 @@
 
           <div class="form-grid">
             <div class="form-field-wrapper">
-              <label class="field-label">Length (ft)</label>
+              <label class="field-label" for="field-length">Length (ft)</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">width</mat-icon>
-                <input matInput type="number" formControlName="length" placeholder="e.g., 40" />
+                <input
+                  matInput
+                  type="number"
+                  id="field-length"
+                  formControlName="length"
+                  placeholder="e.g., 40"
+                />
               </mat-form-field>
             </div>
 
             <div class="form-field-wrapper">
-              <label class="field-label">Width (ft)</label>
+              <label class="field-label" for="field-width">Width (ft)</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">height</mat-icon>
-                <input matInput type="number" formControlName="width" placeholder="e.g., 30" />
+                <input
+                  matInput
+                  type="number"
+                  id="field-width"
+                  formControlName="width"
+                  placeholder="e.g., 30"
+                />
               </mat-form-field>
             </div>
 
             <div class="form-field-wrapper">
-              <label class="field-label">Total Sq. Ft</label>
+              <label class="field-label" for="field-totalSqft"
+                >Total Sq. Ft</label
+              >
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">square_foot</mat-icon>
-                <input matInput type="number" formControlName="totalSqft" placeholder="Auto-calculated" readonly />
+                <input
+                  matInput
+                  type="number"
+                  id="field-totalSqft"
+                  formControlName="totalSqft"
+                  placeholder="Auto-calculated"
+                  readonly
+                />
               </mat-form-field>
             </div>
           </div>
 
           <div class="form-grid">
             <div class="form-field-wrapper">
-              <label class="field-label">Bedrooms</label>
+              <label class="field-label" for="field-bedrooms">Bedrooms</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">bed</mat-icon>
-                <input matInput type="number" formControlName="bedrooms" placeholder="e.g., 3" />
+                <input
+                  matInput
+                  type="number"
+                  id="field-bedrooms"
+                  formControlName="bedrooms"
+                  placeholder="e.g., 3"
+                />
               </mat-form-field>
             </div>
 
             <div class="form-field-wrapper">
-              <label class="field-label">Bathrooms</label>
+              <label class="field-label" for="field-bathrooms">Bathrooms</label>
               <mat-form-field appearance="fill">
                 <mat-icon matPrefix class="field-icon">bathtub</mat-icon>
-                <input matInput type="number" formControlName="bathrooms" placeholder="e.g., 2" />
+                <input
+                  matInput
+                  type="number"
+                  id="field-bathrooms"
+                  formControlName="bathrooms"
+                  placeholder="e.g., 2"
+                />
               </mat-form-field>
             </div>
           </div>
@@ -191,70 +263,124 @@
           </div>
 
           <div class="form-field-wrapper field-price">
-            <label class="field-label">Price</label>
+            <label class="field-label" for="field-price">Price</label>
             <mat-form-field appearance="fill">
               <mat-icon matPrefix class="field-icon">currency_rupee</mat-icon>
-              <input matInput type="number" formControlName="price" placeholder="0" />
+              <input
+                matInput
+                type="number"
+                id="field-price"
+                formControlName="price"
+                placeholder="0"
+              />
             </mat-form-field>
           </div>
         </div>
 
-        <!-- Image Upload -->
-        <div class="form-section">
+        <section class="form-section">
           <div class="section-label">
-            <mat-icon>photo_library</mat-icon>
-            <span>Property Images</span>
+            <mat-icon>photo_library</mat-icon><span>Photos & videos</span>
           </div>
-
-          <input type="file" multiple accept="image/*"
-                 (change)="onFileSelect($event)" #fileInput hidden />
-
-          <div class="upload-area" (click)="fileInput.click()">
-            <mat-icon class="upload-icon">cloud_upload</mat-icon>
-            <p class="upload-title">Click to upload images</p>
-            <p class="upload-hint">PNG, JPG or WEBP &bull; Max 10 MB each</p>
+          <p class="muted">
+            Up to 15 photos and 2 videos. Photos up to 10 MB; videos up to 100
+            MB. Media is optimized before uploading.
+          </p>
+          <input
+            type="file"
+            multiple
+            accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
+            (change)="onFileSelect($event)"
+            #fileInput
+            hidden
+          /><button
+            type="button"
+            class="upload-area"
+            (click)="fileInput.click()"
+            [disabled]="isUploading||loading"
+          >
+            <mat-icon>cloud_upload</mat-icon>
+            <p>Choose photos & videos</p>
+            <small>The first photo is your listing cover.</small></button
+          >@if(optimization){
+          <div class="optimization-status" aria-live="polite">
+            {{optimization}} @if(isUploading&&loading){<progress
+              class="upload-progress-bar"
+              max="100"
+              [value]="progress"
+            >
+              {{progress}}%</progress
+            >}
           </div>
-
-          <!-- Uploading spinner -->
-          <div *ngIf="isUploading" class="upload-progress">
-            <mat-spinner diameter="36"></mat-spinner>
-            <span>Uploading images&hellip;</span>
-          </div>
-
-          <!-- Selected files list -->
-          <div *ngIf="selectedFiles.length > 0 && !isUploading" class="preview-section">
-            <p class="preview-label">{{ selectedFiles.length }} file{{ selectedFiles.length > 1 ? 's' : '' }} selected</p>
-            <div class="file-list">
-              <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
-                <mat-icon class="file-icon">image</mat-icon>
-                <span class="file-name">{{ file.name }}</span>
-                <button type="button" class="remove-btn" (click)="removeFile(i)">
-                  <mat-icon>close</mat-icon>
+          }
+          <div class="media-grid">
+            @for(m of media;track m.url;let i=$index){
+            <article class="media-item">
+              @if(m.kind==='image'){<img
+                [src]="m.url"
+                [alt]="m.name"
+              />}@else{<video
+                [src]="m.url"
+                controls
+                preload="metadata"
+                playsinline
+              ></video
+              >}
+              <div class="media-actions">
+                <button
+                  type="button"
+                  (click)="moveMedia(i,-1)"
+                  [disabled]="i===0||loading||isUploading"
+                  aria-label="Move media earlier"
+                >
+                  ←</button
+                ><button
+                  type="button"
+                  (click)="moveMedia(i,1)"
+                  [disabled]="i===media.length-1||loading||isUploading"
+                  aria-label="Move media later"
+                >
+                  →</button
+                >@if(m.kind==='image'){<button
+                  type="button"
+                  (click)="cover(i)"
+                  [disabled]="loading||isUploading"
+                >
+                  Set cover</button
+                >}<button
+                  type="button"
+                  (click)="removeMedia(i)"
+                  [disabled]="loading||isUploading"
+                >
+                  Remove
                 </button>
               </div>
-            </div>
+            </article>
+            }
           </div>
-
-          <!-- Uploaded images grid -->
-          <div *ngIf="uploadedImageUrls.length > 0" class="uploaded-section">
-            <p class="preview-label">
-              <mat-icon class="check-icon">check_circle</mat-icon>
-              {{ uploadedImageUrls.length }} image{{ uploadedImageUrls.length > 1 ? 's' : '' }} uploaded
-            </p>
-            <div class="image-preview-grid">
-              <div *ngFor="let url of uploadedImageUrls" class="preview-item">
-                <img [src]="url" alt="Uploaded" />
-              </div>
-            </div>
-          </div>
-        </div>
-
+        </section>
+        <section class="publication-field">
+          <label
+            ><input type="checkbox" formControlName="published" />Publish this
+            property</label
+          >
+          <p class="muted">
+            Only published properties marked for sale or rent appear publicly.
+            Leave unchecked to save a draft.
+          </p>
+        </section>
         <!-- Form actions -->
         <div class="form-actions">
-          <button type="submit" class="submit-btn" [disabled]="loading">
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="loading || isUploading"
+          >
             <mat-icon *ngIf="!loading">save</mat-icon>
             <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-            <span>{{ loading ? 'Saving...' : (isEditMode ? 'Update Property' : 'Save Property') }}</span>
+            <span
+              >{{ loading ? 'Saving...' : (isEditMode ? 'Update Property' :
+              'Save Property') }}</span
+            >
           </button>
           <a class="cancel-btn" routerLink="/property-list">
             <mat-icon>close</mat-icon>

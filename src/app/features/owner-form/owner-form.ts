@@ -95,7 +95,7 @@ export class OwnerForm implements OnInit {
           this.router.navigate(['/owner-list']);
         },
         error: (err) => {
-          this.error = err?.error?.message || 'Failed to update owner';
+          this.error = err?.error?.error || 'Failed to update owner';
           this.loading = false;
         }
       });
@@ -105,7 +105,7 @@ export class OwnerForm implements OnInit {
           this.router.navigate(['/owner-list']);
         },
         error: (err) => {
-          this.error = err?.error?.message || 'Failed to create owner';
+          this.error = err?.error?.error || 'Failed to create owner';
           this.loading = false;
         }
       });

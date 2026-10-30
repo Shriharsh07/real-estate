@@ -26,35 +26,50 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	serveAPI(w, r)
+}
+
+func serveAPI(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 
 	switch {
+	case path == "/api/auth/signup" && r.Method == "POST":
+		handlers.Signup(w, r)
+	case path == "/api/auth/user-login" && r.Method == "POST":
+		handlers.UserLogin(w, r)
+	case path == "/api/enquiries" && r.Method == "POST":
+		middleware.AuthMiddleware(handlers.CreateEnquiry)(w, r)
+	case path == "/api/enquiries" && r.Method == "GET":
+		middleware.AdminMiddleware(handlers.GetEnquiries)(w, r)
+	case path == "/api/media/sign" && r.Method == "POST":
+		middleware.AdminMiddleware(handlers.SignMedia)(w, r)
+
 	case path == "/api/auth/login" && r.Method == "POST":
 		handlers.Login(w, r)
 	case path == "/api/properties/stats" && r.Method == "GET":
-		middleware.AuthMiddleware(handlers.GetStats)(w, r)
+		middleware.AdminMiddleware(handlers.GetStats)(w, r)
 	case path == "/api/properties" && r.Method == "POST":
-		middleware.AuthMiddleware(handlers.CreateProperty)(w, r)
+		middleware.AdminMiddleware(handlers.CreateProperty)(w, r)
 	case path == "/api/properties" && r.Method == "GET":
-		handlers.GetProperties(w, r)
+		middleware.OptionalAuth(handlers.GetProperties)(w, r)
 	case matchPath(path, "/api/properties/") && r.Method == "GET":
-		middleware.AuthMiddleware(handlers.GetPropertyById)(w, r)
+		middleware.OptionalAuth(handlers.GetPropertyById)(w, r)
 	case matchPath(path, "/api/properties/") && r.Method == "PUT":
-		middleware.AuthMiddleware(handlers.UpdateProperty)(w, r)
+		middleware.AdminMiddleware(handlers.UpdateProperty)(w, r)
 	case matchPath(path, "/api/properties/") && r.Method == "DELETE":
-		middleware.AuthMiddleware(handlers.DeleteProperty)(w, r)
+		middleware.AdminMiddleware(handlers.DeleteProperty)(w, r)
 	case path == "/api/owners" && r.Method == "POST":
-		middleware.AuthMiddleware(handlers.CreateOwner)(w, r)
+		middleware.AdminMiddleware(handlers.CreateOwner)(w, r)
 	case path == "/api/owners" && r.Method == "GET":
-		handlers.GetOwners(w, r)
+		middleware.AdminMiddleware(handlers.GetOwners)(w, r)
 	case matchPath(path, "/api/owners/") && r.Method == "GET":
-		middleware.AuthMiddleware(handlers.GetOwnerById)(w, r)
+		middleware.AdminMiddleware(handlers.GetOwnerById)(w, r)
 	case matchPath(path, "/api/owners/") && r.Method == "PUT":
-		middleware.AuthMiddleware(handlers.UpdateOwner)(w, r)
+		middleware.AdminMiddleware(handlers.UpdateOwner)(w, r)
 	case matchPath(path, "/api/owners/") && r.Method == "DELETE":
-		middleware.AuthMiddleware(handlers.DeleteOwner)(w, r)
+		middleware.AdminMiddleware(handlers.DeleteOwner)(w, r)
 	case path == "/api/upload" && r.Method == "POST":
-		middleware.AuthMiddleware(handlers.UploadImages)(w, r)
+		middleware.AdminMiddleware(handlers.UploadImages)(w, r)
 	default:
 		http.NotFound(w, r)
 	}

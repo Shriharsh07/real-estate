@@ -20,6 +20,10 @@ func AuthMiddleware(next HandlerFunc) HandlerFunc {
 			return
 		}
 
+		if os.Getenv("JWT_SECRET") == "" {
+			writeError(w, 503, "Authentication unavailable")
+			return
+		}
 		tokenString := authHeader
 		if strings.HasPrefix(authHeader, "Bearer ") {
 			tokenString = authHeader[7:]
@@ -27,7 +31,7 @@ func AuthMiddleware(next HandlerFunc) HandlerFunc {
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return []byte(os.Getenv("JWT_SECRET")), nil
-		})
+		}, jwt.WithValidMethods([]string{"HS256"}), jwt.WithExpirationRequired())
 
 		if err != nil || !token.Valid {
 			writeError(w, http.StatusUnauthorized, "Invalid token")
@@ -57,4 +61,28 @@ func writeJSON(w http.ResponseWriter, status int, data interface{}) {
 
 func writeError(w http.ResponseWriter, status int, message string) {
 	writeJSON(w, status, map[string]string{"error": message})
+}
+
+func Claims(r *http.Request) jwt.MapClaims {
+	c, _ := r.Context().Value("user").(jwt.MapClaims)
+	return c
+}
+func IsAdmin(r *http.Request) bool { return Claims(r)["role"] == "admin" }
+func AdminMiddleware(next HandlerFunc) HandlerFunc {
+	return AuthMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		if !IsAdmin(r) {
+			writeError(w, 403, "Admin access required")
+			return
+		}
+		next(w, r)
+	})
+}
+func OptionalAuth(next HandlerFunc) HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "" {
+			AuthMiddleware(next)(w, r)
+			return
+		}
+		next(w, r)
+	}
 }
