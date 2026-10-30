@@ -125,7 +125,7 @@ func CreateEnquiry(w http.ResponseWriter, r *http.Request) {
 	}
 	var u userAccount
 	config.MongoClient.Database(config.DatabaseName).Collection("users").FindOne(r.Context(), bson.M{"_id": uid}).Decode(&u)
-	base := strings.TrimRight(os.Getenv("PUBLIC_APP_URL"), "/")
+	base := strings.TrimRight(os.Getenv("APP_URL"), "/")
 	parsed, urlErr := url.Parse(base)
 	if urlErr != nil || parsed.Host == "" || (parsed.Scheme != "https" && parsed.Scheme != "http") {
 		writeError(w, 503, "Public app URL is not configured")

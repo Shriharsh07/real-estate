@@ -6,7 +6,7 @@ Install frontend dependencies with `npm ci`. Start the Go API with `go run .` an
 
 Additional environment variables:
 - `WHATSAPP_NUMBER`: admin WhatsApp number, including country code, digits only.
-- `PUBLIC_APP_URL`: canonical public application origin for enquiry links.
+- `APP_URL`: canonical public application origin for enquiry links.
 
 ## Accounts and publication
 
