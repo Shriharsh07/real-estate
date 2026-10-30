@@ -59,6 +59,25 @@ nav {
 }
 .menu-toggle {
   display: none;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--primary-color);
+  background: var(--primary-tint);
+  line-height: 1;
+}
+.menu-toggle svg {
+  display: block;
+  flex-shrink: 0;
+}
+.menu-toggle:hover,
+.menu-toggle[aria-expanded="true"] {
+  background: var(--primary-color);
+  color: #fff;
 }
 .site-footer {
   width: 100%;
@@ -135,7 +154,7 @@ nav {
 }
 @media (max-width: 1000px) {
   .menu-toggle {
-    display: block;
+    display: inline-flex;
   }
   nav {
     display: none;
