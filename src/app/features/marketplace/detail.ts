@@ -1,5 +1,11 @@
 import { A11yModule } from "@angular/cdk/a11y";
-import { Component, inject, OnInit, ChangeDetectorRef } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectorRef,
+  InjectionToken,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, ActivatedRoute } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
@@ -7,6 +13,13 @@ import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog";
 import { Router } from "@angular/router";
 import { Auth } from "../../core/services/auth";
+export const WHATSAPP_REDIRECT = new InjectionToken<(url: string) => void>(
+  "WhatsApp redirect",
+  {
+    providedIn: "root",
+    factory: () => (url: string) => window.location.assign(url),
+  },
+);
 @Component({
   standalone: true,
   imports: [CommonModule, RouterLink, A11yModule],
@@ -214,6 +227,7 @@ export class Detail implements OnInit {
   route = inject(ActivatedRoute);
   auth = inject(Auth);
   cdr = inject(ChangeDetectorRef);
+  private redirectToWhatsApp = inject(WHATSAPP_REDIRECT);
   p: any;
   active = 0;
   lightbox = false;
@@ -275,12 +289,16 @@ export class Detail implements OnInit {
     if (this.busy) return;
     this.busy = true;
     this.error = "";
+    this.cdr.markForCheck();
     this.http
       .post<any>("/api/enquiries", { propertyID: this.p._id })
       .subscribe({
         next: (r) => {
           this.busy = false;
-          window.location.assign(r.url);
+          // Render the idle state synchronously before the browser leaves for
+          // WhatsApp, so app switching/back navigation restores an enabled button.
+          this.cdr.detectChanges();
+          this.redirectToWhatsApp(r.url);
         },
         error: (e) => {
           this.busy = false;
