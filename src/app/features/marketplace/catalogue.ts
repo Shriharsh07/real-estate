@@ -22,17 +22,14 @@ import { Auth } from "../../core/services/auth";
           </div>
         </div>
         <div class="hero-visual">
-          @if (properties[0]?.images?.[0]) {
-            <img
-              [src]="properties[0].images[0]"
-              alt="Explore our available properties"
-            />
-          } @else {
-            <div class="architectural">
-              <span>⌂</span>
-              <p>Room for new beginnings.</p>
-            </div>
-          }
+          <img
+            src="/images/estatehub-hero.webp"
+            alt="Contemporary villa with warm stone finishes and a landscaped tropical garden"
+            width="1200"
+            height="800"
+            fetchpriority="high"
+            decoding="async"
+          />
           <div class="floating-note">
             <span class="note-icon">⌂</span>
             <div>
