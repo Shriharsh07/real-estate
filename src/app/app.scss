@@ -178,3 +178,16 @@ nav {
     padding: 12px 16px;
   }
 }
+.site-header { background: #faf7f2f2; }
+.brand { font-weight: 700; letter-spacing: -1.2px; }
+.brand .brand-mark { border-radius: 50% 50% 10px 10px; }
+nav > a:not(.btn) { position: relative; padding-block: 8px; }
+nav > a.current:not(.btn) { color: var(--primary-color); }
+nav > a.current:not(.btn)::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--primary-color); }
+nav > a:hover { color: var(--primary-color); }
+nav > a.btn:hover { color: white; }
+.site-footer { background: #f0e9df; padding-block: 40px; }
+.footer-brand p { margin-top: 8px; }
+@media (max-width: 1000px) { nav { background: var(--surface-color); } nav.open { animation: navigation-in 180ms ease-out; } }
+@keyframes navigation-in { from { opacity: .3; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { nav.open { animation: none; } }

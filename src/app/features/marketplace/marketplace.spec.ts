@@ -223,3 +223,21 @@ it("restores enquiry buttons and displays an error when preparation fails", () =
   expect(f.nativeElement.textContent).toContain("Please retry");
   expect(f.componentInstance.busy).toBe(false);
 });
+it("applies a property type shortcut and clears both the type and budget", () => {
+  configure(Catalogue);
+  const f = TestBed.createComponent(Catalogue);
+  const http = TestBed.inject(HttpTestingController);
+  f.detectChanges();
+  http.expectOne((r) => r.url === "/api/properties").flush([]);
+  f.detectChanges();
+  const shortcuts: HTMLButtonElement[] = Array.from(f.nativeElement.querySelectorAll(".type-shortcuts button"));
+  shortcuts.find((button) => button.textContent?.trim() === "Land")!.click();
+  http.expectOne((r) => r.params.get("type") === "land" && r.params.get("public") === "true").flush([]);
+  f.detectChanges();
+  expect(shortcuts.find((button) => button.textContent?.trim() === "Land")!.getAttribute("aria-pressed")).toBe("true");
+  f.componentInstance.filters.minPrice = 1000;
+  f.componentInstance.clear();
+  http.expectOne((r) => !r.params.has("type") && !r.params.has("minPrice")).flush([]);
+  f.detectChanges();
+  expect(f.componentInstance.filters.type).toBe("");
+});

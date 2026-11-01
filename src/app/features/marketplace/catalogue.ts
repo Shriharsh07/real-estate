@@ -39,46 +39,8 @@ import { Auth } from "../../core/services/auth";
         </div>
       </section>
     }
-    <section class="page catalogue">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">{{
-            manage ? "YOUR WORKSPACE" : "EXPLORE ESTATEHUB"
-          }}</span>
-          <h1>{{ manage ? "Manage listings" : "Spaces worth discovering" }}</h1>
-          <p class="muted">
-            {{
-              manage
-                ? "Review, publish, and keep every property up to date."
-                : "Find a property that feels right for you."
-            }}
-          </p>
-        </div>
-        @if (manage) {
-          <a class="btn" routerLink="/property-form">+ Add property</a>
-        }
-        <button
-          class="btn secondary mobile-filter"
-          (click)="filtersOpen = true"
-        >
-          ☷ Filters
-        </button>
-      </div>
-      <div class="quick-chips">
-        <button [class.active]="filters.status === ''" (click)="choose('')">
-          All properties</button
-        ><button
-          [class.active]="filters.status === 'for-sale'"
-          (click)="choose('for-sale')"
-        >
-          For sale ↗</button
-        ><button
-          [class.active]="filters.status === 'for-rent'"
-          (click)="choose('for-rent')"
-        >
-          For rent ⌂
-        </button>
-      </div>
+    <section class="page search-section" aria-label="Property search">
+      <div class="search-intro"><div><span class="eyebrow">START WITH WHAT MATTERS</span><h2>Where will your next chapter begin?</h2></div><button class="btn secondary mobile-filter" (click)="filtersOpen = true">Search & filters</button></div>
       <form
         class="filter-bar"
         [class.sheet-open]="filtersOpen"
@@ -128,6 +90,51 @@ import { Auth } from "../../core/services/auth";
           Clear
         </button>
       </form>
+      <div class="type-shortcuts" aria-label="Property types"><span>Explore by type</span>
+        <button [class.active]="filters.type === ''" [attr.aria-pressed]="filters.type === ''" (click)="chooseType('')">All spaces</button>
+        @for (type of types; track type) { <button [class.active]="filters.type === type" [attr.aria-pressed]="filters.type === type" (click)="chooseType(type)">{{ type | titlecase }}</button> }
+      </div>
+    </section>
+    <section class="page catalogue" [class.admin-catalogue]="manage">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">{{
+            manage ? "YOUR WORKSPACE" : "EXPLORE ESTATEHUB"
+          }}</span>
+          <h1>{{ manage ? "Manage listings" : "Spaces worth discovering" }}</h1>
+          <p class="muted">
+            {{
+              manage
+                ? "Review, publish, and keep every property up to date."
+                : "Find a property that feels right for you."
+            }}
+          </p>
+        </div>
+        @if (manage) {
+          <a class="btn" routerLink="/property-form">+ Add property</a>
+        }
+        <button
+          class="btn secondary mobile-filter"
+          (click)="filtersOpen = true"
+        >
+          ☷ Filters
+        </button>
+      </div>
+      <div class="quick-chips">
+        <button [class.active]="filters.status === ''" (click)="choose('')">
+          All properties</button
+        ><button
+          [class.active]="filters.status === 'for-sale'"
+          (click)="choose('for-sale')"
+        >
+          For sale ↗</button
+        ><button
+          [class.active]="filters.status === 'for-rent'"
+          (click)="choose('for-rent')"
+        >
+          For rent ⌂
+        </button>
+      </div>
       @if (loading) {
         <div class="property-grid" aria-label="Loading properties">
           @for (i of [1, 2, 3]; track i) {
@@ -145,14 +152,14 @@ import { Auth } from "../../core/services/auth";
           <button class="btn" (click)="load()">Try again</button>
         </div>
       } @else {
-        <p class="results-count">
+        <p class="results-count" role="status" aria-live="polite">
           {{ properties.length }}
           {{ properties.length === 1 ? "property" : "properties" }} found
         </p>
         <div class="property-grid">
           @for (p of properties; track p._id) {
             <article class="listing-card">
-              <a [routerLink]="['/property', p._id]" class="card-media">
+              <a [routerLink]="['/property', p._id]" class="card-media"><span class="media-fallback" aria-hidden="true">&#8962;</span>
                 @if (p.images?.[0]) {
                   <img
                     [src]="p.images[0]"
@@ -238,6 +245,10 @@ export class Catalogue implements OnInit {
     maxPrice: "",
   };
   ngOnInit() {
+    this.load();
+  }
+  chooseType(type: string) {
+    this.filters.type = type;
     this.load();
   }
   choose(status: string) {
