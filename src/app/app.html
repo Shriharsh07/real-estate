@@ -27,13 +27,13 @@
         />
       </svg>
     </button>
-    <nav id="navigation" [class.open]="menu">
-      <a routerLink="/" (click)="menu=false">Explore properties</a
-      >@if(auth.isAdmin){<a routerLink="/dashboard" (click)="menu=false"
+    <nav id="navigation" aria-label="Main navigation" [class.open]="menu" (keydown.escape)="menu=false">
+      <a routerLink="/" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" ariaCurrentWhenActive="page" (click)="menu=false">Explore properties</a
+      >@if(auth.isAdmin){<a routerLink="/dashboard" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" ariaCurrentWhenActive="page" (click)="menu=false"
         >Overview</a
-      ><a routerLink="/property-list" (click)="menu=false">Manage listings</a
-      ><a routerLink="/owner-list" (click)="menu=false">Owners</a
-      ><a routerLink="/enquiries" (click)="menu=false">Enquiries</a>}
+      ><a routerLink="/property-list" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" ariaCurrentWhenActive="page" (click)="menu=false">Manage listings</a
+      ><a routerLink="/owner-list" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" ariaCurrentWhenActive="page" (click)="menu=false">Owners</a
+      ><a routerLink="/enquiries" routerLinkActive="current" [routerLinkActiveOptions]="{exact:true}" ariaCurrentWhenActive="page" (click)="menu=false">Enquiries</a>}
       @if(auth.loggedIn){<button class="btn secondary" (click)="logout()">
         Log out</button
       >}@else{<a routerLink="/login" (click)="menu=false">Log in</a
@@ -47,7 +47,7 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <a class="brand" routerLink="/">Estate<span>Hub</span></a>
-      <p>Find a place. Start your next chapter.</p>
+      <p>Considered spaces. New beginnings.</p>
     </div>
     <div class="footer-meta">
       <span>© {{year}} EstateHub. All rights reserved.</span>

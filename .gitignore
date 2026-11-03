@@ -50,3 +50,7 @@ server/node_modules
 
 # Local dependency and validation caches
 .cache/
+
+# Local test artifacts and generated design drafts
+/.angular/test-temp/
+/output/
